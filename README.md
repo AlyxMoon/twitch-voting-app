@@ -11,9 +11,9 @@
 https://lirikker.com/lirik/subday/
 
 ## Roadmap
-- [ ] Pick framework for frontend
-- [ ] Pick framework for backend server
-- [ ] Pick database technology
+- [x] Pick framework for frontend
+- [x] Pick framework for backend server
+- [x] Pick database technology
 - [ ] Enable connecting to twitch
   - [ ] Authorize with Pokket to allow her to moderate stuff
 - [ ] Get emotes of channel via twitch
