@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const path = require('path')
 
 const express = require('express')
@@ -23,4 +25,4 @@ app.use(session({ secret: 'pokket-voting-app' }))
 require('./routes')(app)
 
 app.listen(serverConfig.port, serverConfig.host)
-console.log(`Pokket voting server running on http://${serverConfig.host}:serverConfig.port`)
+console.log(`Pokket voting server running on http://${serverConfig.host}:${serverConfig.port}`)
