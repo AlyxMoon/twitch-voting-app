@@ -31,22 +31,25 @@ https://lirikker.com/lirik/subday/
   - [ ] Page/component for viewing a poll
     - [ ] Show list of top ten games that have been voted on
     - [ ] Option to show full list of voted games
-    - [ ] Allow Pokket to give a reaction to a game
-    - [ ] Allow Pokket to remove a game from the selection
+    - [ ] Allow Pokket/mods to give a reaction to a game
+    - [ ] Allow Pokket/mods to remove a game from the selection
   - [ ] Login component
     - [ ] Link to Twitch auth
   - [ ] Games component
     - [ ] Load list of games
     - [ ] Allow searching the game list
-    - [ ] Allow Pokket to ban a game so it cannot be voted on
-    - [ ] Allow Pokket to unban a game
-    - [ ] Allow Pokket to create aliases for a game
+    - [ ] Allow Pokket/mods to ban a game so it cannot be voted on
+    - [ ] Allow Pokket/mods to unban a game
+    - [ ] Allow Pokket/mods to create aliases for a game
+  - [ ] Page for stream overlay
+    - [ ] Active connection to server, show minimalist list of poll/top votes
+    - [ ] Active connection to server, show message when a user votes
 
 
 - [ ] Complete Backend
   - [ ] Manage chatbot
   - [ ] Connect via twitch
-    - [ ] Allow Pokket to authorize to manage stuff in frontend
+    - [ ] Allow Pokket/mods to authorize to manage stuff in frontend
     - [ ] Allow chatbot to authorize to connect to Pokket's chat
   - [ ] poll management (to/from db)
     - [ ] Save a vote selection for a poll
