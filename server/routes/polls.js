@@ -11,7 +11,7 @@ routes.get('/', (req, res) => {
 
   db.find({ ...model })
     .then(result => {
-      res.json({ success: false, data: result })
+      res.json({ success: true, data: result })
     })
     .catch(error => {
       console.error(error.message, error.stack)

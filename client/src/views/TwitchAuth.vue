@@ -4,6 +4,7 @@
 
 <script>
 import fetch from 'isomorphic-unfetch'
+import { serverAddress } from '@/consts'
 
 export default {
   name: 'twitchAuth',
@@ -12,7 +13,7 @@ export default {
       console.error('did not get a hash value!')
     } else {
       let token = document.location.hash.replace('#id_token=', '')
-      fetch(`http://localhost:8081/twitch/auth/save?id_token=${token}`)
+      fetch(`${serverAddress}/twitch/auth/save?id_token=${token}`)
         .then(res => res.json())
         .then(data => {
           if (data.success) {
