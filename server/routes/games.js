@@ -1,24 +1,58 @@
 const path = require('path')
 const fetch = require('isomorphic-unfetch')
+const { differenceInHours } = require('date-fns')
 
 const routes = require('express').Router()
+const db = require(path.join(__dirname, '..', 'db'))
 const config = require(path.join(__dirname, '..', 'config', 'games'))
 const { buildQueryParamsString } = require(path.join(__dirname, '..', 'util'))
 
 routes.get('/search/:search', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
+  let search = req.params.search
   let query = {
     api_key: config.apiKey,
     field_list: 'name,guid',
     format: 'json',
-    query: req.params.search,
+    query: search,
     resources: 'game'
   }
+  let filters = {
+    search
+  }
 
-  paginateResults(`${config.endpoint}/search`, query)
-    .then(results => res.json(results))
-    .catch(error => res.json(error))
+  db.find({ model: 'GameSearch', filters })
+    .then(data => {
+      if (data.length > 0) {
+        if (differenceInHours((new Date()), data[0].updatedAt) < config.cacheFor) {
+          return data[0]
+        } else {
+          return new Promise(resolve => {
+            paginateResults(`${config.endpoint}/search`, query)
+              .then(results => {
+                resolve(db.update({
+                  model: 'GameSearch',
+                  id: data[0].id,
+                  data: { search, results }
+                }))
+              })
+          })
+        }
+      }
+
+      return new Promise(resolve => {
+        paginateResults(`${config.endpoint}/search`, query)
+          .then(results => {
+            resolve(db.create({
+              model: 'GameSearch',
+              data: { search, results }
+            }))
+          })
+      })
+    })
+    .then(result => res.json({ sucess: true, data: result }))
+    .catch(error => res.json({ success: false, error: error.message }))
 })
 
 module.exports = routes

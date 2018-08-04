@@ -3,8 +3,8 @@ const path = require('path')
 const rethinkDB = require('rethinkdb')
 const dbConfig = require(path.join(__dirname, '..', 'config', 'database'))
 
-const { Poll, Vote } = require(path.join(__dirname, 'models'))
-const knownModels = { Poll, Vote }
+const { GameSearch, Poll, Vote } = require(path.join(__dirname, 'models'))
+const knownModels = { GameSearch, Poll, Vote }
 
 module.exports = {
   init: () => {
@@ -25,13 +25,13 @@ module.exports = {
     })
   },
 
-  find: ({ model = '' }) => {
+  find: ({ model = '', filters = {} }) => {
     return new Promise((resolve, reject) => {
       if (!isKnownModel(model)) {
         return reject(new Error(`Model ${model} was not recognized as a valid type`))
       }
 
-      return resolve(knownModels[model].run())
+      return resolve(knownModels[model].filter(filters).run())
     })
   },
 
