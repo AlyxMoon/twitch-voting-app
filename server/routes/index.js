@@ -1,5 +1,6 @@
 const routesTwitch = require('./twitch')
 const routesPolls = require('./polls')
+const routesGames = require('./games')
 
 module.exports = app => {
   app.get('/', (req, res) => {
@@ -9,4 +10,5 @@ module.exports = app => {
 
   app.use('/twitch', routesTwitch)
   app.use('/api/polls', routesPolls)
+  app.use('/api/games', routesGames)
 }
