@@ -58,8 +58,8 @@ https://lirikker.com/lirik/subday/
     - [ ] Remove a game and all its votes from the poll
     - [x] Set a poll to be active or not
   - [x] return a list of polls (from db)
-  - [ ] Connect to Giant Bomb for list of games
-    - [ ] Register and get an API key
+  - [x] Connect to Giant Bomb for list of games
+    - [x] Register and get an API key
   - [ ] Save list of banned games to the db
   - [ ] Save alias for a game to the db
 
