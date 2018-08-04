@@ -1,10 +1,12 @@
 const path = require('path')
+const dateFns = require('date-fns')
 
 const rethinkDB = require('rethinkdb')
 const dbConfig = require(path.join(__dirname, '..', 'config', 'database'))
 
 const { GameSearch, Poll, Vote } = require(path.join(__dirname, 'models'))
 const knownModels = { GameSearch, Poll, Vote }
+const protectedKeys = ['id', 'createdAt', 'updatedAt']
 
 module.exports = {
   init: () => {
@@ -41,7 +43,9 @@ module.exports = {
         return reject(new Error(`Model ${model} was not recognized as a valid type`))
       }
 
-      const newModel = new knownModels[model](data)
+      let dataToSave = removeProtectedKeys(data)
+
+      const newModel = new knownModels[model](dataToSave)
       return resolve(newModel.saveAll())
     })
   },
@@ -52,8 +56,13 @@ module.exports = {
         return reject(new Error(`Model ${model} was not recognized as a valid type`))
       }
 
+      let dataToSave = {
+        ...removeProtectedKeys(data),
+        updatedAt: dateFns.format(new Date())
+      }
+
       knownModels[model].get(id).getJoin().run().then(row => {
-        resolve(row.merge(data).saveAll())
+        resolve(row.merge(dataToSave).saveAll())
       })
     })
   },
@@ -73,4 +82,13 @@ module.exports = {
 
 const isKnownModel = (model) => {
   return Object.keys(knownModels).some(knownModel => knownModel === model)
+}
+
+const removeProtectedKeys = data => {
+  const newData = Object.assign({}, data)
+  protectedKeys.forEach(key => {
+    delete newData[key]
+  })
+
+  return newData
 }

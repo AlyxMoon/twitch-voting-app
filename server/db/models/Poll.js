@@ -1,4 +1,5 @@
 const path = require('path')
+const { format } = require('date-fns')
 
 const thinkagain = require(path.join(__dirname, 'shared', 'thinkagain'))
 
@@ -7,7 +8,15 @@ const Poll = thinkagain.createModel('Poll', {
   properties: {
     id: { type: 'string' },
     active: { type: 'boolean' },
-    name: { type: 'string' }
+    name: { type: 'string' },
+    createdAt: {
+      type: 'string',
+      default: format(new Date())
+    },
+    updatedAt: {
+      type: 'string',
+      default: format(new Date())
+    }
   },
   required: ['active', 'name']
 })
