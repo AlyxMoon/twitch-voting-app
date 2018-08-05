@@ -8,7 +8,7 @@ routesTwitch.get('/auth', (req, res) => {
   let query = buildQueryParamsString({
     client_id: twitchConfig.clientId,
     redirect_uri: twitchConfig.redirectUri,
-    response_type: 'id_token',
+    response_type: 'token id_token',
     scope: twitchConfig.scopes
   })
 
@@ -21,7 +21,7 @@ routesTwitch.get('/auth/redirect', (req, res) => {
 
 routesTwitch.get('/auth/save', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
-  if (req.query.id_token) {
+  if (req.query.idToken && req.query.accessToken) {
     // TODO @allistermoon: Save the id_token and do stuff
     res.json({ success: true })
   } else {
