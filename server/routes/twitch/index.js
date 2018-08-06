@@ -1,10 +1,10 @@
 const path = require('path')
 
-const routesTwitch = require('express').Router()
-const twitchConfig = require(path.join(__dirname, '..', 'config', 'auth'))
-const { buildQueryParamsString } = require(path.join(__dirname, '..', 'util'))
+const routes = require('express').Router()
+const twitchConfig = require(path.join(__dirname, '..', '..', 'config', 'auth'))
+const { buildQueryParamsString } = require(path.join(__dirname, '..', '..', 'util'))
 
-routesTwitch.get('/auth', (req, res) => {
+routes.get('/auth', (req, res) => {
   let query = buildQueryParamsString({
     client_id: twitchConfig.clientId,
     redirect_uri: twitchConfig.redirectUri,
@@ -15,11 +15,11 @@ routesTwitch.get('/auth', (req, res) => {
   res.redirect(`${twitchConfig.authEndpoint}${query}`)
 })
 
-routesTwitch.get('/auth/redirect', (req, res) => {
+routes.get('/auth/redirect', (req, res) => {
   res.redirect('http://localhost:8080')
 })
 
-routesTwitch.get('/auth/save', (req, res) => {
+routes.get('/auth/save', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
   if (req.query.idToken && req.query.accessToken) {
     // TODO @allistermoon: Save the id_token and do stuff
@@ -29,4 +29,4 @@ routesTwitch.get('/auth/save', (req, res) => {
   }
 })
 
-module.exports = routesTwitch
+module.exports = routes

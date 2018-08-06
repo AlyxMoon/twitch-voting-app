@@ -1,7 +1,8 @@
 const path = require('path')
 
 const routes = require('express').Router()
-const db = require(path.join(__dirname, '..', 'db'))
+const routesVotes = require('./votes')
+const db = require(path.join(__dirname, '..', '..', 'db'))
 
 const model = { model: 'Poll' }
 
@@ -33,6 +34,12 @@ routes.get('/:id', (req, res) => {
       res.json({ success: false, error: error.message })
     })
 })
+
+// Child route for votes
+routes.use('/:id/votes', (req, res, next) => {
+  req.pollId = req.params.id
+  next()
+}, routesVotes)
 
 // CREATE
 routes.post('/', (req, res) => {

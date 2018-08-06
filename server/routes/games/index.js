@@ -3,9 +3,9 @@ const fetch = require('isomorphic-unfetch')
 const { differenceInHours } = require('date-fns')
 
 const routes = require('express').Router()
-const db = require(path.join(__dirname, '..', 'db'))
-const config = require(path.join(__dirname, '..', 'config', 'games'))
-const { buildQueryParamsString } = require(path.join(__dirname, '..', 'util'))
+const db = require(path.join(__dirname, '..', '..', 'db'))
+const config = require(path.join(__dirname, '..', '..', 'config', 'games'))
+const { buildQueryParamsString } = require(path.join(__dirname, '..', '..', 'util'))
 
 routes.get('/search/:search', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
