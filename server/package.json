@@ -16,6 +16,8 @@
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "isomorphic-unfetch": "^2.1.1",
+    "passport": "^0.4.0",
+    "passport-twitch": "^1.0.3",
     "rethinkdb": "^2.3.3",
     "thinkagain": "^0.1.6"
   },

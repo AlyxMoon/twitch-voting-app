@@ -4,8 +4,7 @@ const dateFns = require('date-fns')
 const rethinkDB = require('rethinkdb')
 const dbConfig = require(path.join(__dirname, '..', 'config', 'database'))
 
-const { GameSearch, Poll, Vote } = require(path.join(__dirname, 'models'))
-const knownModels = { GameSearch, Poll, Vote }
+const knownModels = require(path.join(__dirname, 'models'))
 const protectedKeys = ['id', 'createdAt', 'updatedAt']
 
 module.exports = {
@@ -47,6 +46,23 @@ module.exports = {
 
       const newModel = new knownModels[model](dataToSave)
       return resolve(newModel.saveAll())
+    })
+  },
+
+  findOrCreate: ({ model = '', data = {} }) => {
+    return new Promise((resolve, reject) => {
+      if (!isKnownModel(model)) {
+        return reject(new Error(`Model ${model} was not recognized as a valid type`))
+      }
+
+      let dataToFindOrCreate = removeProtectedKeys(data)
+      module.exports.find({ model, filters: dataToFindOrCreate })
+        .then(response => {
+          if (response.length > 0) {
+            return resolve(response)
+          }
+          return resolve(module.exports.create({ model, data: dataToFindOrCreate }))
+        })
     })
   },
 

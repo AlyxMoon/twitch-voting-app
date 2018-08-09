@@ -10,6 +10,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 
 const serverConfig = require(path.join(__dirname, 'config', 'server'))
+const passport = require(path.join(__dirname, 'auth'))
 
 const db = require(path.join(__dirname, 'db'))
 db.init()
@@ -21,6 +22,7 @@ app.use(cors())
 app.use(cookieParser())
 app.use(bodyParser())
 app.use(session({ secret: 'pokket-voting-app' }))
+app.use(passport.initialize())
 
 require('./routes')(app)
 

@@ -49,6 +49,7 @@ https://lirikker.com/lirik/subday/
 - [ ] Complete Backend
   - [ ] Manage chatbot
   - [ ] Connect via twitch
+    - [x] Connect to twitch authentication
     - [ ] Allow Pokket/mods to authorize to manage stuff in frontend
     - [ ] Allow chatbot to authorize to connect to Pokket's chat
   - [ ] poll management (to/from db)

@@ -5,6 +5,6 @@ module.exports = {
   endpointKraken: 'https://api.twitch.tv/kraken',
   clientId: process.env.TWITCH_CLIENT_ID || '',
   clientSecret: process.env.TWITCH_CLIENT_SECRET || '',
-  redirectUri: 'http://localhost:8080/twitch/redirect',
-  scopes: 'openid channel_check_subscription chat_login'
+  redirectUri: 'http://localhost:8081/twitch/auth/callback',
+  scopes: 'openid channel_check_subscription chat_login user_read'
 }
