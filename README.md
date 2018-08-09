@@ -61,8 +61,11 @@ https://lirikker.com/lirik/subday/
   - [x] return a list of polls (from db)
   - [x] Connect to Giant Bomb for list of games
     - [x] Register and get an API key
+    - [ ] Switch to /games endpoint
+    - [ ] Filter by game name/platforms
   - [ ] Save list of banned games to the db
   - [ ] Save alias for a game to the db
+  - [ ] Allow configuring what platforms to search for
 
 
 - [ ] Complete chatbot
