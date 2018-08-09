@@ -15,6 +15,9 @@ const passport = require(path.join(__dirname, 'auth'))
 const db = require(path.join(__dirname, 'db'))
 db.init()
 
+const bot = require(path.join(__dirname, 'chatbot'))
+bot.init()
+
 const app = express()
 app.use('/static', express.static(path.join(__dirname, 'dist', 'static')))
 

@@ -97,7 +97,7 @@ routes.get('/search/:search', (req, res) => {
           })
       })
     })
-    .then(result => res.json({ sucess: true, data: result }))
+    .then(result => res.json({ success: true, data: result }))
     .catch(error => res.json({ success: false, error: error.message }))
 })
 

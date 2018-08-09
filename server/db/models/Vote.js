@@ -8,7 +8,7 @@ const Vote = thinkagain.createModel('Vote', {
   properties: {
     id: { type: 'string' },
     count: { type: 'number' },
-    game: { type: 'number' },
+    game: { type: 'string' },
     poll_id: { type: 'string' },
     createdAt: {
       type: 'string',

@@ -9,9 +9,10 @@ const model = { model: 'Vote' }
 routes.get('/add/:gameId', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
+  console.log(req.params.gameId)
   db.find({
     ...model,
-    filters: { poll_id: req.pollId, game: parseInt(req.params.gameId, 10) }
+    filters: { poll_id: req.pollId, game: req.params.gameId }
   })
     .then(response => {
       if (response && response.length > 0) {
@@ -27,7 +28,7 @@ routes.get('/add/:gameId', (req, res) => {
           ...model,
           data: {
             count: 1,
-            game: parseInt(req.params.gameId, 10),
+            game: req.params.gameId,
             poll_id: req.pollId
           }
         })
@@ -47,7 +48,7 @@ routes.get('/remove/:gameId', (req, res) => {
 
   db.find({
     ...model,
-    filters: { poll_id: req.pollId, game: parseInt(req.params.gameId, 10) }
+    filters: { poll_id: req.pollId, game: req.params.gameId }
   })
     .then(response => {
       if (response && response.length > 0) {
