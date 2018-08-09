@@ -1,5 +1,5 @@
 module.exports = {
-  allowedUsers: ['pokket'],
+  channel: 'alyxdelunar',
   authEndpoint: 'https://id.twitch.tv/oauth2/authorize',
   endpointHelix: 'https://api.twitch.tv/helix',
   endpointKraken: 'https://api.twitch.tv/kraken',

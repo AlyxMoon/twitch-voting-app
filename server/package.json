@@ -19,7 +19,8 @@
     "passport": "^0.4.0",
     "passport-twitch": "^1.0.3",
     "rethinkdb": "^2.3.3",
-    "thinkagain": "^0.1.6"
+    "thinkagain": "^0.1.6",
+    "twitch-js": "^1.2.14"
   },
   "devDependencies": {
     "eslint": "^5.2.0",
