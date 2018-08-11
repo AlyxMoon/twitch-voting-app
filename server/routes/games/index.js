@@ -78,9 +78,9 @@ routes.get('/searchByName/:search', (req, res) => {
   let query = {
     api_key: config.apiKey,
     field_list: 'name,guid',
+    filter: `name:${search}`,
     format: 'json',
-    query: search,
-    resources: 'game'
+    limit: 100
   }
   let filters = {
     search
@@ -93,7 +93,7 @@ routes.get('/searchByName/:search', (req, res) => {
           return data[0]
         } else {
           return new Promise(resolve => {
-            paginateResults(`${config.endpoint}/search`, query)
+            paginateResults(`${config.endpoint}/games`, query)
               .then(results => {
                 resolve(db.update({
                   model: 'GameSearch',
@@ -106,7 +106,7 @@ routes.get('/searchByName/:search', (req, res) => {
       }
 
       return new Promise(resolve => {
-        paginateResults(`${config.endpoint}/search`, query)
+        paginateResults(`${config.endpoint}/games`, query)
           .then(results => {
             resolve(db.create({
               model: 'GameSearch',
@@ -121,20 +121,22 @@ routes.get('/searchByName/:search', (req, res) => {
 
 module.exports = routes
 
-const paginateResults = (url, queryParams, page = 1, results = [], attempts = 0) => {
+const paginateResults = (url, queryParams, offset = 0, results = [], attempts = 0) => {
   if (attempts > 83) { // Why 83? No clue, because. That's why
     return results
   }
 
-  queryParams.page = page
+  queryParams.offset = offset
   let query = buildQueryParamsString(queryParams)
 
   return fetch(`${url}${query}`)
     .then(result => result.json())
     .then(result => {
+      if (result.results.length < 0) return results
+
       results = results.concat(result.results)
-      if (result.number_of_page_results === result.limit && result.limit > 1) {
-        return paginateResults(url, queryParams, page + 1, results, attempts + 1)
+      if (result.limit + result.offset < result.number_of_page_results) {
+        return paginateResults(url, queryParams, offset + queryParams.limit, results, attempts + 1)
       } else {
         return results
       }
