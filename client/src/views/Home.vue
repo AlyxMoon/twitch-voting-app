@@ -15,7 +15,7 @@
           </thead>
           <tbody>
             <tr v-for="(vote, j) of poll.votes" :key="j">
-              <td>{{ vote.game }}</td>
+              <td>{{ vote.gameInfo.name }}</td>
               <td>{{ vote.count }}</td>
             </tr>
           </tbody>

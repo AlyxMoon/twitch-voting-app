@@ -5,14 +5,28 @@ const db = require(path.join(__dirname, '..', '..', '..', 'db'))
 
 const model = { model: 'Vote' }
 
+// Get all votes under a certain poll
+routes.get('/', (req, res) => {
+  res.setHeader('Content-Type', 'application/json')
+  db.find({
+    ...model,
+    filters: { poll_id: req.pollId }
+  })
+    .then(response => {
+      res.json({ success: true, data: response })
+    })
+    .catch(error => {
+      res.json({ success: false, error: error.message })
+    })
+})
+
 // Place a vote
 routes.get('/add/:gameId', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
-  console.log(req.params.gameId)
   db.find({
     ...model,
-    filters: { poll_id: req.pollId, game: req.params.gameId }
+    filters: { poll_id: req.pollId, game_id: req.params.gameId }
   })
     .then(response => {
       if (response && response.length > 0) {
@@ -28,7 +42,7 @@ routes.get('/add/:gameId', (req, res) => {
           ...model,
           data: {
             count: 1,
-            game: req.params.gameId,
+            game_id: req.params.gameId,
             poll_id: req.pollId
           }
         })
@@ -48,7 +62,7 @@ routes.get('/remove/:gameId', (req, res) => {
 
   db.find({
     ...model,
-    filters: { poll_id: req.pollId, game: req.params.gameId }
+    filters: { poll_id: req.pollId, game_id: req.params.gameId }
   })
     .then(response => {
       if (response && response.length > 0) {

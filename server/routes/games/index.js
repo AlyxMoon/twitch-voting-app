@@ -7,7 +7,25 @@ const db = require(path.join(__dirname, '..', '..', 'db'))
 const config = require(path.join(__dirname, '..', '..', 'config', 'games'))
 const { buildQueryParamsString } = require(path.join(__dirname, '..', '..', 'util'))
 
-routes.get('/:id', (req, res) => {
+routes.post('/', (req, res) => {
+  res.setHeader('Content-Type', 'application/json')
+
+  let { data } = req.body
+  if (!data) {
+    return res.json({ success: false, error: 'a required field was not included' })
+  }
+
+  db.findOrCreate({ model: 'Game', data })
+    .then(response => {
+      res.json({ success: true, data: response })
+    })
+    .catch(error => {
+      console.error(error.message, error.stack)
+      res.json({ success: false, error: error.message })
+    })
+})
+
+routes.get('/searchByID/:id', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
   let search = req.params.id
@@ -53,7 +71,7 @@ routes.get('/:id', (req, res) => {
     .catch(error => res.json({ success: false, error: error.message }))
 })
 
-routes.get('/search/:search', (req, res) => {
+routes.get('/searchByName/:search', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
   let search = req.params.search

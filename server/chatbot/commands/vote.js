@@ -5,7 +5,9 @@ const db = require(path.join(__dirname, '..', '..', 'db'))
 const vote = ({ context, params, bot }) => {
   // TODO @allistermoon: Implement vote
   let game = params.join(' ')
-  fetch(`http://localhost:8080/api/games/search/${game}`)
+  if (game.length === 0) return
+
+  fetch(`http://localhost:8080/api/games/searchByName/${game}`)
     .then(response => response.json())
     .then(response => {
       let { results } = response.data
@@ -20,18 +22,27 @@ const vote = ({ context, params, bot }) => {
 
       // DO STUFF TO VOTE
       bot.say(context.channel, `Yeah! I am recording your vote for ${results[0].name}`)
-      return results[0]
-    })
-    .then(gameToVote => {
-      if (!gameToVote) return
 
-      game = gameToVote
+      // Save game in database so we have a link for metainformation, like the name
+      return fetch(`http://localhost:8080/api/games`, {
+        method: 'POST',
+        body: JSON.stringify({ data: results[0] }),
+        headers: { 'Content-Type': 'application/json' }
+      }).then(response => response.json())
+    })
+    .then(response => {
+      if (!response.success) return
+
+      game = response.data[0]
       return db.findOne({ model: 'Poll', filter: { active: true } })
     })
     .then(poll => {
       if (!poll) return
 
       fetch(`http://localhost:8080/api/polls/${poll.id}/votes/add/${game.guid}`)
+    })
+    .catch(error => {
+      console.error(error.message, error.stack)
     })
 }
 

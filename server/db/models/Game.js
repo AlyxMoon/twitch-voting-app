@@ -3,13 +3,12 @@ const { format } = require('date-fns')
 
 const thinkagain = require(path.join(__dirname, 'shared', 'thinkagain'))
 
-const Vote = thinkagain.createModel('Vote', {
+const Game = thinkagain.createModel('Game', {
   type: 'object',
   properties: {
     id: { type: 'string' },
-    count: { type: 'number' },
-    game_id: { type: 'string' },
-    poll_id: { type: 'string' },
+    guid: { type: 'string' },
+    name: { type: 'string' },
     createdAt: {
       type: 'string',
       default: format(new Date())
@@ -19,7 +18,7 @@ const Vote = thinkagain.createModel('Vote', {
       default: format(new Date())
     }
   },
-  required: ['count', 'game_id', 'poll_id']
+  required: ['guid', 'name']
 })
 
-module.exports = Vote
+module.exports = Game
