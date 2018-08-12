@@ -29,7 +29,7 @@ const vote = ({ context, params, bot }) => {
     })
     .then(response => {
       if (!response || !response.success) return
-      game = response.data[0]
+      game = response.data
       return db.findOne({ model: 'Poll', filters: { active: true } })
     })
     .then(poll => {
