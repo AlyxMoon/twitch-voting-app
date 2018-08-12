@@ -7,6 +7,7 @@ const UserVote = thinkagain.createModel('UserVote', {
   type: 'object',
   properties: {
     id: { type: 'string' },
+    poll_id: { type: 'string' },
     vote_id: { type: 'string' },
     twitchId: { type: 'string' },
     createdAt: {
@@ -18,7 +19,7 @@ const UserVote = thinkagain.createModel('UserVote', {
       default: format(new Date())
     }
   },
-  required: ['vote_id', 'twitchId']
+  required: ['poll_id', 'vote_id', 'twitchId']
 })
 
 module.exports = UserVote

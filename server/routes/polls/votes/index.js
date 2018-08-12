@@ -24,24 +24,30 @@ routes.get('/', (req, res) => {
 routes.get('/add/:gameId', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
-  let twitchId = req.query.twitchId
+  let { twitchId } = req.query
+  let { gameId } = req.params
+  let { pollId } = req
+
   if (!twitchId) {
     return res.json({ success: false, error: 'The twitchId of user was not provided.' })
   }
 
-  db.findOne({
-    ...model,
-    filters: { poll_id: req.pollId, game_id: req.params.gameId }
+  db.find({
+    model: 'UserVote',
+    filters: { twitchId }
   })
     .then(response => {
-      console.log('this is initial response', response)
+      if (response.length === 0) {
+        return db.findOne({
+          ...model,
+          filters: { poll_id: pollId, game_id: gameId }
+        })
+      } else {
+        throw new Error('The user has already voted.')
+      }
+    })
+    .then(response => {
       if (response) {
-        // Check if user has voted
-        console.log('GOT RESPONSE FROM VOTES =================', response)
-        if (response.userVotes.some(user => user.twitchId === twitchId)) {
-          return { message: 'The user has already voted.' }
-        }
-
         return db.update({
           ...model,
           id: response.id,
@@ -50,23 +56,22 @@ routes.get('/add/:gameId', (req, res) => {
           }
         })
       } else {
-        console.log('we are creating')
         return db.create({
           ...model,
           data: {
             count: 1,
-            game_id: req.params.gameId,
-            poll_id: req.pollId
+            game_id: gameId,
+            poll_id: pollId
           }
         })
       }
     })
     // Add in UserVote association
     .then(response => {
-      console.log('did we create something?', response)
       return db.create({
         model: 'UserVote',
         data: {
+          poll_id: pollId,
           vote_id: response.id,
           twitchId
         }
