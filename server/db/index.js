@@ -42,7 +42,13 @@ module.exports = {
         return reject(new Error(`Model ${model} was not recognized as a valid type`))
       }
 
-      return resolve(knownModels[model].filter(Object.assign({}, filters)).nth(0).getJoin().run())
+      knownModels[model].filter(Object.assign({}, filters)).limit(1).getJoin().run()
+        .then(response => {
+          if (!response || response.length < 1) {
+            return resolve()
+          }
+          resolve(response[0])
+        })
     })
   },
 
