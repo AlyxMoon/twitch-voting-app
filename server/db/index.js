@@ -72,9 +72,9 @@ module.exports = {
       }
 
       let dataToFindOrCreate = removeProtectedKeys(data)
-      module.exports.find({ model, filters: dataToFindOrCreate })
+      module.exports.findOne({ model, filters: dataToFindOrCreate })
         .then(response => {
-          if (response.length > 0) {
+          if (response) {
             return resolve(response)
           }
           return resolve(module.exports.create({ model, data: dataToFindOrCreate }))

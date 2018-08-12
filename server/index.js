@@ -24,8 +24,14 @@ app.use('/static', express.static(path.join(__dirname, 'dist', 'static')))
 app.use(cors())
 app.use(cookieParser())
 app.use(bodyParser())
-app.use(session({ secret: 'pokket-voting-app' }))
+app.use(session({
+  secret: 'pokket-voting-app',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { sameSite: false }
+}))
 app.use(passport.initialize())
+app.use(passport.session())
 
 require('./routes')(app)
 

@@ -2,7 +2,7 @@ const path = require('path')
 const passport = require('passport')
 const { Strategy: TwitchStrategy } = require('passport-twitch')
 
-const { findOrCreate } = require(path.join(__dirname, '..', 'db'))
+const { get, findOrCreate } = require(path.join(__dirname, '..', 'db'))
 const config = require(path.join(__dirname, '..', 'config', 'auth'))
 
 passport.use(new TwitchStrategy({
@@ -26,7 +26,15 @@ passport.use(new TwitchStrategy({
     })
 }))
 
-passport.serializeUser((user, done) => done(null, user))
-passport.deserializeUser((user, done) => done(null, user))
+passport.serializeUser((user, done) => {
+  console.log(user)
+  done(null, user.id)
+})
+passport.deserializeUser((id, done) => {
+  console.log(id)
+  get({ model: 'User', id })
+    .then(user => done(null, user))
+    .catch(done)
+})
 
 module.exports = passport
