@@ -8,6 +8,8 @@ const Vote = require('./Vote')
 Poll.hasMany(UserVote, 'userVotes', 'id', 'poll_id')
 Poll.hasMany(Vote, 'votes', 'id', 'poll_id')
 
+UserVote.belongsTo(User, 'user', 'twitchId', 'twitchId')
+
 Vote.belongsTo(Poll, 'poll', 'poll_id', 'id')
 Vote.belongsTo(Game, 'gameInfo', 'game_id', 'guid')
 

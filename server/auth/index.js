@@ -13,7 +13,7 @@ passport.use(new TwitchStrategy({
 },
 (accessToken, refresh, profile, done) => {
   const data = {
-    twitchId: profile.id,
+    twitchId: String(profile.id),
     username: profile.username,
     displayname: profile.displayName
   }

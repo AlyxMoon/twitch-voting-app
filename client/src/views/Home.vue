@@ -13,10 +13,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(vote, j) of poll.votes" :key="j">
-              <td>{{ vote.gameInfo.name }}</td>
-              <td>{{ vote.count }}</td>
-            </tr>
+            <template v-for="(vote, j) of poll.votes">
+              <tr :key="'game-info-' + j">
+                <td>{{ vote.gameInfo.name }}</td>
+                <td>{{ vote.count }}</td>
+              </tr>
+              <tr v-for="(user, k) of getUsersPerVote(i, vote.id)" :key="'user-votes-' + vote.id + '-' + k">
+                <td colspan="2">{{ user.user ? user.user.username : user.id }}</td>
+              </tr>
+            </template>
           </tbody>
         </table>
       </div>
@@ -54,6 +59,14 @@ export default {
     setData ({ error, polls }) {
       if (error) this.error = error
       if (polls) this.polls = polls
+    },
+
+    getUsersPerVote (pollIndex, voteId) {
+      if (!this.polls || !this.polls[pollIndex] || !this.polls[pollIndex].userVotes) return []
+
+      return this.polls[pollIndex].userVotes.filter(userVote => {
+        return userVote.vote_id === voteId
+      })
     }
   }
 }

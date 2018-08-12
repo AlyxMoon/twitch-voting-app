@@ -24,7 +24,7 @@ routes.get('/', (req, res) => {
 routes.get('/add/:gameId', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
-  let { twitchId } = req.query
+  let { displayname, username, twitchId } = req.query
   let { gameId } = req.params
   let { pollId } = req
 
@@ -32,10 +32,16 @@ routes.get('/add/:gameId', (req, res) => {
     return res.json({ success: false, error: 'The twitchId of user was not provided.' })
   }
 
-  db.find({
-    model: 'UserVote',
-    filters: { twitchId }
+  db.findOrCreate({
+    model: 'User',
+    data: { displayname, username, twitchId }
   })
+    .then(() => {
+      return db.find({
+        model: 'UserVote',
+        filters: { twitchId }
+      })
+    })
     .then(response => {
       if (response.length === 0) {
         return db.findOne({

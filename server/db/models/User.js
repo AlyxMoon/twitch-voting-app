@@ -7,7 +7,7 @@ const User = thinkagain.createModel('User', {
   type: 'object',
   properties: {
     id: { type: 'string' },
-    twitchId: { type: 'number' },
+    twitchId: { type: 'string' },
     displayname: { type: 'string' },
     username: { type: 'string' },
     createdAt: {
