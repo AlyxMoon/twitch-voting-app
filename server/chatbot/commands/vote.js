@@ -12,11 +12,11 @@ const vote = ({ context, params, bot }) => {
     .then(response => {
       let { results } = response.data
       if (results.length === 0) {
-        bot.say(context.channel, 'No results were found for that game!')
+        bot.whisper(context.user.username, 'No results were found for that game!')
         return
       }
       if (results.length > 1) {
-        bot.say(context.channel, 'That vote was too vague. Please try again with a more specific vote')
+        bot.whisper(context.user.username, 'That vote was too vague. Please try again with a more specific vote')
         return
       }
 
@@ -40,9 +40,9 @@ const vote = ({ context, params, bot }) => {
     })
     .then((response) => {
       if (!response || !response.success) {
-        bot.say(context.channel, `${context.user.username}, your vote has not been recorded. You voted already!`)
+        bot.whisper(context.user.username, `${context.user.username}, your vote has not been recorded. You voted already!`)
       } else {
-        bot.say(context.channel, `${context.user.username}, your vote has been recorded for ${game.name}`)
+        bot.whisper(context.user.username, `${context.user.username}, your vote has been recorded for ${game.name}`)
       }
     })
     .catch(error => console.error(error.message, error.stack))
