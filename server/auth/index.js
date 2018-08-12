@@ -27,11 +27,9 @@ passport.use(new TwitchStrategy({
 }))
 
 passport.serializeUser((user, done) => {
-  console.log(user)
   done(null, user.id)
 })
 passport.deserializeUser((id, done) => {
-  console.log(id)
   get({ model: 'User', id })
     .then(user => done(null, user))
     .catch(done)
