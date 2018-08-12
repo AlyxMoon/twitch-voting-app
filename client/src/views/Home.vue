@@ -1,16 +1,15 @@
 <template>
   <div v-if="polls && polls.length > 0">
-    <div class="card" v-for="(poll, i) of polls" :key="i">
-      <div class="card-header">
-        <div class="header-left">{{ poll.name }}</div>
-        <div class="header-right">{{ poll.active ? 'active' : 'inactive' }}</div>
+    <div class="poll-wrapper" v-for="(poll, i) of polls" :key="i">
+      <div class="poll-header">
+        <div class="header">{{ poll.name }}</div>
       </div>
-      <div class="card-body" v-if="poll.votes && poll.votes.length > 0">
-        <table>
+      <div class="poll-body" v-if="poll.votes && poll.votes.length > 0">
+        <table class="pure-table pure-table-horizontal full-width">
           <thead>
             <tr>
-              <th>Game ID</th>
-              <th>Vote Count</th>
+              <th>Game Name</th>
+              <th>Votes</th>
             </tr>
           </thead>
           <tbody>
@@ -61,32 +60,28 @@ export default {
 </script>
 
 <style scoped>
-.card {
-  border: 1px solid black;
-  margin: 1rem;
-  max-width: 500px;
+.poll-wrapper {
+  background-color: #6C2FB3;
+  border: 3px solid #2F76B4;
+  border-radius: 10px;
+  box-shadow: 2px 2px 2px 1px #2F76B4;
+  font-weight: bold;
+  margin: 1em 0;
+  overflow: hidden;
 }
 
-.card-header {
-  border-bottom: 1px solid black;
-  text-align: center;
+.poll-header {
+  font-size: 1.4em;
+  padding: 0.2em 0.5em;
 }
 
-.header-left {
-  border-right: 1px solid black;
-  display: inline-block;
-  margin: 0;
-  width: 49%;
+table {
+  border: 10px solid black;
 }
 
-.header-right {
-  display: inline-block;
-  margin: 0;
-  width: 49%;
-}
-
-td {
-  text-align: center;
+thead {
+  background-color: #D5C7E6;
+  font-size: 1.2em;
 }
 
 </style>
