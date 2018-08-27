@@ -65,19 +65,18 @@ module.exports = {
     })
   },
 
-  findOrCreate: ({ model = '', data = {} }) => {
+  findOrCreate: ({ model = '', key = 'id', data = {} }) => {
     return new Promise((resolve, reject) => {
       if (!isKnownModel(model)) {
         return reject(new Error(`Model ${model} was not recognized as a valid type`))
       }
 
-      let dataToFindOrCreate = removeProtectedKeys(data)
-      module.exports.findOne({ model, filters: dataToFindOrCreate })
+      module.exports.findOne({ model, filters: { [key]: data[key] } })
         .then(response => {
           if (response) {
             return resolve(response)
           }
-          return resolve(module.exports.create({ model, data: dataToFindOrCreate }))
+          return resolve(module.exports.create({ model, data: removeProtectedKeys(data) }))
         })
     })
   },

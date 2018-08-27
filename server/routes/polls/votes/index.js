@@ -34,6 +34,7 @@ routes.get('/add/:gameId', (req, res) => {
 
   db.findOrCreate({
     model: 'User',
+    key: 'twitchId',
     data: { displayname, username, twitchId }
   })
     .then(() => {

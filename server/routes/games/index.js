@@ -15,7 +15,7 @@ routes.post('/', (req, res) => {
     return res.json({ success: false, error: 'a required field was not included' })
   }
 
-  db.findOrCreate({ model: 'Game', data })
+  db.findOrCreate({ model: 'Game', key: 'guid', data })
     .then(response => {
       res.json({ success: true, data: response })
     })

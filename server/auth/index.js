@@ -17,7 +17,7 @@ passport.use(new TwitchStrategy({
     username: profile.username,
     displayname: profile.displayName
   }
-  findOrCreate({ model: 'User', data })
+  findOrCreate({ model: 'User', key: 'twitchId', data })
     .then(response => {
       done(null, response)
     })
