@@ -35,7 +35,7 @@ const vote = ({ context, params, bot }) => {
     .then(poll => {
       if (!poll) return
 
-      let query = `?twitchId=${context.user['user-id']}&displayname=${context.user['display_name']}&username=${context.user.username}`
+      let query = `?twitchId=${context.user['user-id']}&displayname=${context.user['display-name']}&username=${context.user.username}`
 
       return fetch(`http://localhost:8080/api/polls/${poll.id}/votes/add/${game.guid}${query}`)
         .then(response => response.json())
