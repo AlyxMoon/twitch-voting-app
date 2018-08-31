@@ -40,7 +40,7 @@ routes.get('/add/:gameId', (req, res) => {
     .then(() => {
       return db.find({
         model: 'UserVote',
-        filters: { twitchId }
+        filters: { twitchId, poll_id: pollId }
       })
     })
     .then(response => {
