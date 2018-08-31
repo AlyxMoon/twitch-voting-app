@@ -1,4 +1,6 @@
 const path = require('path')
+const fetch = require('isomorphic-unfetch')
+
 const passport = require(path.join(__dirname, '..', '..', 'auth'))
 const config = require(path.join(__dirname, '..', '..', 'config', 'auth'))
 const bot = require(path.join(__dirname, '..', '..', 'chatbot'))
@@ -43,6 +45,23 @@ routes.get('/mods', (req, res) => {
       return res.json({ success: true, data })
     })
     .catch(error => {
+      return res.json({ success: false, error: error.message })
+    })
+})
+
+routes.get('/emotes', (req, res) => {
+  res.setHeader('Content-Type', 'application/json')
+
+  // Secret API Endpoint! I have no emoticons to test, so leaving pokket in statically to test features
+  fetch(`https://api.twitch.tv/api/channels/pokket/product`, {
+    headers: { 'Client-ID': config.clientId }
+  })
+    .then(response => response.json())
+    .then(data => {
+      return res.json({ success: true, data: data.emoticons })
+    })
+    .catch(error => {
+      console.error(error.message, error.stack)
       return res.json({ success: false, error: error.message })
     })
 })
