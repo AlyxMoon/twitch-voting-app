@@ -108,7 +108,7 @@ module.exports = {
         ...removeProtectedKeys(data),
         updatedAt: dateFns.format(new Date())
       }
-      knownModels[model].run().then(documents => {
+      knownModels[model].getJoin().run().then(documents => {
         Promise.all(documents.map(document => document.merge(dataToSave).saveAll()))
           .then(resolve)
           .catch(reject)
