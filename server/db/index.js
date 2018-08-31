@@ -98,6 +98,24 @@ module.exports = {
     })
   },
 
+  updateAll: ({ model = '', data = {} }) => {
+    return new Promise((resolve, reject) => {
+      if (!isKnownModel(model)) {
+        return reject(new Error(`Model ${model} was not recognized as a valid type`))
+      }
+
+      let dataToSave = {
+        ...removeProtectedKeys(data),
+        updatedAt: dateFns.format(new Date())
+      }
+      knownModels[model].run().then(documents => {
+        Promise.all(documents.map(document => document.merge(dataToSave).saveAll()))
+          .then(resolve)
+          .catch(reject)
+      })
+    })
+  },
+
   delete: ({ model = '', id }) => {
     return new Promise((resolve, reject) => {
       if (!isKnownModel(model)) {

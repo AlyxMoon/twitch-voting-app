@@ -1,6 +1,13 @@
 <template>
   <section class="navbar pure-menu pure-menu-horizontal">
-    <a href="/" class="pure-menu-heading pure-menu-link">App</a>
+    <ul class="pure-menu-list">
+      <li class="pure-menu-item">
+        <a href="/" class="pure-menu-heading pure-menu-link">App</a>
+      </li>
+      <li class="pure-menu-item">
+        <a href="/polls" class="pure-menu-link">Polls Management</a>
+      </li>
+    </ul>
     <ul class="navbar-right pure-menu-list">
       <li v-if="!username" class="pure-menu-item">
         <a href="http://localhost:8081/twitch/auth" class="pure-menu-link">Twitch Login</a>

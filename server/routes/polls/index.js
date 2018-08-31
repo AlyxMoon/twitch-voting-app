@@ -80,6 +80,27 @@ routes.post('/:id', (req, res) => {
     })
 })
 
+// Set a poll to active, which will set all others to inactive
+routes.get('/:id/active', (req, res) => {
+  res.setHeader('Content-Type', 'application/json')
+  let id = req.params.id
+  let newPolls = []
+
+  db.updateAll({ ...model, data: { active: false } })
+    .then(result => {
+      newPolls = result
+      return db.update({ ...model, id, data: { active: true } })
+    })
+    .then(result => {
+      newPolls[newPolls.findIndex(poll => poll.id === id)] = result
+      return res.json({ success: true, data: newPolls })
+    })
+    .catch(error => {
+      console.error(error.message, error.stack)
+      res.json({ success: false, error: error.message })
+    })
+})
+
 // DELETE
 routes.delete('/:id', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
