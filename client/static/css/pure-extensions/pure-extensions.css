@@ -1,6 +1,7 @@
 
 .pure-button-error,
-.pure-button-secondary {
+.pure-button-secondary,
+.pure-button-success {
   color: white;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
@@ -11,4 +12,8 @@
 
 .pure-button-secondary {
   background-color: rgb(66, 184, 221);
+}
+
+.pure-button-success {
+  background-color: rgb(28, 184, 65);
 }

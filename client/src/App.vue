@@ -24,6 +24,10 @@ body {
   padding: 1em;
 }
 
+.pure-form input {
+  color: #777;
+}
+
 .full-width {
   width: 100%;
 }

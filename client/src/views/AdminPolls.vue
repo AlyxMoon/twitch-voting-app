@@ -1,6 +1,19 @@
 <template>
   <div>
     <h1>Polls</h1>
+    <button
+      class="pure-button pure-button-primary"
+      v-if="!showNewPollForm"
+      @click="showNewPollForm = !showNewPollForm">
+      Add New Poll
+    </button>
+    <form class="pure-form" v-if="showNewPollForm">
+      <fieldset>
+        <input type="text" placeholder="Poll Name" v-model="newPoll.name" />
+        <button class="pure-button pure-button-success" @click.prevent="createPoll()">Create</button>
+      </fieldset>
+    </form>
+
     <div v-if="polls && polls.length > 0">
       <table class="pure-table pure-table-horizontal">
         <thead>
@@ -37,7 +50,9 @@ export default {
   data () {
     return {
       error: null,
-      polls: null
+      newPoll: { name: '', active: false },
+      polls: null,
+      showNewPollForm: false
     }
   },
 
@@ -59,10 +74,28 @@ export default {
       if (polls) this.polls = polls
     },
 
+    createPoll () {
+      if (this.newPoll && this.newPoll.name !== '') {
+        fetch(`${serverAddress}/api/polls`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json; charset=utf-8' },
+          body: JSON.stringify({ data: this.newPoll })
+        })
+          .then(res => res.json())
+          .then(res => {
+            if (!res.success) {
+              this.error = res.error
+              return console.error(res.error)
+            }
+            this.polls.push(res.data)
+          })
+      }
+    },
+
     deletePoll (index) {
       if (!isNaN(index) && this.polls[index]) {
         fetch(`${serverAddress}/api/polls/${this.polls[index].id}`, {
-          method: 'delete'
+          method: 'DELETE'
         })
           .then(res => res.json())
           .then(res => {
