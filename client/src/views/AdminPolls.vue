@@ -11,9 +11,11 @@
       <fieldset>
         <input type="text" placeholder="Poll Name" v-model="newPoll.name" />
         <button class="pure-button pure-button-success" @click.prevent="createPoll()">Create</button>
+        <button class="pure-button" @click.prevent="showNewPollForm = false">Cancel</button>
       </fieldset>
     </form>
 
+    <hr />
     <div v-if="polls && polls.length > 0">
       <table class="pure-table pure-table-horizontal">
         <thead>
