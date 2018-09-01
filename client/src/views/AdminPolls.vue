@@ -18,7 +18,7 @@
     <hr />
     <componentPollView
       v-if="selectedPoll !== null"
-      :poll="polls[selectedPoll]" :unviewPoll="unviewPoll">
+      :emotes="emotes" :poll="polls[selectedPoll]" :setReaction="setReaction" :unviewPoll="unviewPoll">
     </componentPollView>
     <componentPollList
       v-else
@@ -42,6 +42,7 @@ export default {
 
   data () {
     return {
+      emotes: null,
       error: null,
       newPoll: { name: '', active: false },
       polls: null,
@@ -51,20 +52,34 @@ export default {
   },
 
   beforeRouteEnter (to, from, next) {
+    let data = {}
+
     fetch(`${serverAddress}/api/polls`)
       .then(res => res.json())
       .then(result => {
-        if (!result.success) {
-          return next(vm => vm.setData({ error: result.error }))
-        }
+        if (!result.success) throw result.error
+        data.polls = result.data
 
-        return next(vm => vm.setData({ polls: result.data }))
+        return fetch(`${serverAddress}/twitch/emotes`)
       })
+      .then(res => res.json())
+      .then(result => {
+        if (!result.success) throw result.error
+        data.emotes = result.data
+
+        return next(vm => vm.setData(data))
+      })
+      .catch(error => next(vm => vm.setData({ error: error })))
   },
 
   methods: {
-    setData ({ error, polls }) {
-      if (error) this.error = error
+    setData ({ emotes, error, polls }) {
+      if (error) {
+        console.error(error)
+        this.error = error
+      }
+
+      if (emotes) this.emotes = emotes
       if (polls) this.polls = polls
     },
 
@@ -122,6 +137,26 @@ export default {
               return console.error(res.error)
             }
             this.polls = res.data
+          })
+      }
+    },
+
+    setReaction (pollId, voteId, emoteLink) {
+      if (pollId && emoteLink) {
+        fetch(`${serverAddress}/api/polls/${pollId}/votes/${voteId}/reaction`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json; charset=utf-8' },
+          body: JSON.stringify({ emoteLink })
+        })
+          .then(res => res.json())
+          .then(res => {
+            if (!res.success) {
+              this.error = res.error
+              return console.error(res.error)
+            }
+            let poll = this.polls.find(poll => poll.id === pollId)
+            let index = poll.votes.findIndex(vote => vote.id === voteId)
+            poll.votes.splice(index, 1, res.data)
           })
       }
     }

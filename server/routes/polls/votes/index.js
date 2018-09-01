@@ -92,6 +92,25 @@ routes.get('/add/:gameId', (req, res) => {
     })
 })
 
+// Set a reaction on a vote
+routes.post('/:id/reaction', (req, res) => {
+  res.setHeader('Content-Type', 'application/json')
+  let { emoteLink } = req.body
+  let id = req.params.id
+  if (!emoteLink) {
+    return res.json({ success: false, error: 'a required field was not included' })
+  }
+
+  db.update({ ...model, id, data: { emoteLink } })
+    .then(result => {
+      res.json({ success: true, data: result })
+    })
+    .catch(error => {
+      console.error(error.message, error.stack)
+      res.json({ success: false, error: error.message })
+    })
+})
+
 // Remove a vote
 routes.get('/remove/:gameId', (req, res) => {
   res.setHeader('Content-Type', 'application/json')

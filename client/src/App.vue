@@ -30,7 +30,11 @@ body {
   text-align: center;
 }
 
-.pure-form input {
+.pull-right {
+  float: right;
+}
+
+.pure-form input, select, option {
   color: #777;
 }
 
