@@ -16,22 +16,22 @@ https://lirikker.com/lirik/subday/
 - [x] Pick database technology
 - [ ] Enable connecting to twitch
   - [ ] Authorize with Pokket to allow her to moderate stuff
-- [ ] Get emotes of channel via twitch
-- [ ] Create/connect to chatbot to view commands (`!vote`)
+- [x] Get emotes of channel via twitch
+- [x] Create/connect to chatbot to view commands (`!vote`)
 
 - [ ] Complete Frontend
   - [ ] Home page
     - [x] Contains list of polls and their info
     - [ ] Useful links or info
-  - [ ] Page for managing polls
-    - [ ] Add a new poll
-    - [ ] Set a poll to be currently active for voting
-    - [ ] Delete a poll
+  - [x] Page for managing polls
+    - [x] Add a new poll
+    - [x] Set a poll to be currently active for voting
+    - [x] Delete a poll
     - [ ] Limit game selection to specified list
   - [ ] Page/component for viewing a poll
     - [ ] Show list of top ten games that have been voted on
     - [ ] Option to show full list of voted games
-    - [ ] Allow Pokket/mods to give a reaction to a game
+    - [x] Allow Pokket/mods to give a reaction to a game
     - [ ] Allow Pokket/mods to remove a game from the selection
   - [x] Login component
     - [x] Link to Twitch auth
@@ -55,7 +55,7 @@ https://lirikker.com/lirik/subday/
   - [ ] poll management (to/from db)
     - [x] Save a vote selection for a poll
     - [x] Return poll info
-    - [ ] Save Pokket's reaction to a game
+    - [x] Save Pokket's reaction to a game
     - [x] Remove a game and all its votes from the poll
     - [x] Set a poll to be active or not
   - [x] return a list of polls (from db)
