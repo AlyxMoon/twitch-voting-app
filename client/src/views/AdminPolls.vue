@@ -16,29 +16,14 @@
     </form>
 
     <hr />
-    <div v-if="polls && polls.length > 0">
-      <table class="pure-table pure-table-horizontal">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Active</th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(poll, index) in polls" :key="'poll-' + poll.id">
-            <td>{{ poll.id }}</td>
-            <td>{{ poll.name }}</td>
-            <td>{{ poll.active ? 'X' : '' }}</td>
-            <td><button class="pure-button pure-button-secondary" @click="setActive(index)">Set Active</button></td>
-            <td><button class="pure-button pure-button-error" @click="deletePoll(index)">Delete</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <h4 v-else>There are no polls yet!</h4>
+    <componentPollView
+      v-if="selectedPoll !== null"
+      :poll="polls[selectedPoll]" :unviewPoll="unviewPoll">
+    </componentPollView>
+    <componentPollList
+      v-else
+      :polls="polls" :deletePoll="deletePoll" :viewPoll="viewPoll" :setActive="setActive">
+    </componentPollList>
   </div>
 </template>
 
@@ -46,14 +31,21 @@
 import fetch from 'isomorphic-unfetch'
 import { serverAddress } from '@/consts'
 
+import { PollListMinimalist, PollView } from '@/components'
+
 export default {
   name: 'adminPolls',
+  components: {
+    'componentPollList': PollListMinimalist,
+    'componentPollView': PollView
+  },
 
   data () {
     return {
       error: null,
       newPoll: { name: '', active: false },
       polls: null,
+      selectedPoll: null,
       showNewPollForm: false
     }
   },
@@ -107,6 +99,16 @@ export default {
             }
             this.polls.splice(index, 1)
           })
+      }
+    },
+
+    unviewPoll () {
+      this.selectedPoll = null
+    },
+
+    viewPoll (index) {
+      if (!isNaN(index) && this.polls[index]) {
+        this.selectedPoll = index
       }
     },
 

@@ -24,6 +24,12 @@ body {
   padding: 1em;
 }
 
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
 .pure-form input {
   color: #777;
 }
