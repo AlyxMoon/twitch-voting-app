@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import { AdminPolls, Home, TwitchAuth } from '@/views'
+import * as views from '@/views'
 
 Vue.use(Router)
 
@@ -11,17 +11,22 @@ export default new Router({
     {
       path: '/',
       name: 'Home',
-      component: Home
+      component: views.Home
+    },
+    {
+      path: '/games',
+      name: 'Games',
+      component: views.Games
     },
     {
       path: '/polls',
       name: 'adminPolls',
-      component: AdminPolls
+      component: views.AdminPolls
     },
     {
       path: '/twitch/redirect',
       name: 'TwitchAuth',
-      component: TwitchAuth
+      component: views.TwitchAuth
     }
   ]
 })

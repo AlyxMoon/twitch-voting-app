@@ -4,22 +4,21 @@
       <div class="poll-header">
         <div class="header">{{ poll.name }}</div>
       </div>
-      <div class="poll-body" v-if="poll.votes && poll.votes.length > 0">
+      <div class="poll-body">
         <table class="pure-table pure-table-horizontal full-width">
           <thead>
             <tr>
               <th>Game Name</th>
-              <th>Votes</th>
+              <th class="center">Votes</th>
+              <th class="center">Reaction</th>
             </tr>
           </thead>
           <tbody>
             <template v-for="(vote, j) of poll.votes">
               <tr :key="'game-info-' + j">
                 <td>{{ vote.gameInfo.name }}</td>
-                <td>{{ vote.count }}</td>
-              </tr>
-              <tr v-for="(user, k) of getUsersPerVote(i, vote.id)" :key="'user-votes-' + vote.id + '-' + k">
-                <td colspan="2">{{ user.user ? user.user.username : user.id }}</td>
+                <td class="center">{{ vote.count }}</td>
+                <td><img class="center" v-if="vote.emoteLink" :src="vote.emoteLink" /></td>
               </tr>
             </template>
           </tbody>
@@ -73,28 +72,24 @@ export default {
 </script>
 
 <style scoped>
+
 .poll-wrapper {
-  background-color: #6C2FB3;
-  border: 3px solid #2F76B4;
-  border-radius: 10px;
-  box-shadow: 2px 2px 2px 1px #2F76B4;
-  font-weight: bold;
-  margin: 1em 0;
-  overflow: hidden;
+  margin: 1rem;
 }
 
 .poll-header {
+  background-color: #E0E0E0;
+  border-bottom: 2px solid black;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  color: black;
   font-size: 1.4em;
+  font-weight: bold;
   padding: 0.2em 0.5em;
 }
 
-table {
-  border: 10px solid black;
-}
-
-thead {
-  background-color: #D5C7E6;
-  font-size: 1.2em;
+td > img {
+  display: table-cell;
 }
 
 </style>

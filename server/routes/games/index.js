@@ -7,6 +7,15 @@ const db = require(path.join(__dirname, '..', '..', 'db'))
 const config = require(path.join(__dirname, '..', '..', 'config', 'games'))
 const { buildQueryParamsString } = require(path.join(__dirname, '..', '..', 'util'))
 
+routes.get('/', (req, res) => {
+  db.find({ model: 'Game' })
+    .then(response => res.json({ success: true, data: response }))
+    .catch(error => {
+      console.error(error.message, error.stack)
+      return res.json({ success: false, error: error.message })
+    })
+})
+
 routes.post('/', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
