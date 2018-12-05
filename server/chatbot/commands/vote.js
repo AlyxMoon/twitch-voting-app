@@ -10,15 +10,25 @@ const vote = ({ context, params, bot }) => {
 
   fetchJSON(`http://localhost:8080/api/games/searchByName/${gameToVote}`)
     .then(response => {
+      let index = 0
       let { results } = response.data
+
+      // If no results, then obviously no game has been found, that's a problem
       if (results.length === 0) throw new errors.GameNotFound()
-      if (results.length > 1) throw new errors.GameTooVague()
+
+      // If there are more than one result, then we need to check and see if the exact name of the gameToVote is in them
+      // As this can happen with games with sequels (i.e. 'The Sims')
+      if (results.length > 1) {
+        index = results.findIndex(result => result.name === gameToVote)
+
+        if (index === -1) throw new errors.GameTooVague()
+      }
 
       // Save game in database so we have a link for metainformation, like the name
       return Promise.all([
         fetchJSON(`http://localhost:8080/api/games`, {
           method: 'POST',
-          body: JSON.stringify({ data: results[0] }),
+          body: JSON.stringify({ data: results[index] }),
           headers: { 'Content-Type': 'application/json' }
         }),
         db.findOne({ model: 'Poll', filters: { active: true } })
