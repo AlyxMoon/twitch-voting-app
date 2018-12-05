@@ -6,9 +6,12 @@ const fetchJSON = require(path.join(__dirname, '../../lib/fetchJSON'))
 
 const vote = ({ context, params, bot }) => {
   let gameToVote = params.join(' ')
-  if (gameToVote.length === 0) throw new errors.NoVoteGiven()
 
-  fetchJSON(`http://localhost:8080/api/games/searchByName/${gameToVote}`)
+  return Promise.resolve()
+    .then(() => {
+      if (gameToVote.length === 0) throw new errors.NoVoteGiven()
+      return fetchJSON(`http://localhost:8080/api/games/searchByName/${gameToVote}`)
+    })
     .then(response => {
       let index = 0
       let { results } = response.data
