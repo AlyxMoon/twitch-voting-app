@@ -7,6 +7,9 @@
       <li class="pure-menu-item">
         <a href="/polls" class="pure-menu-link">Polls Management</a>
       </li>
+      <li class="pure-menu-item">
+        <a href="/games" class="pure-menu-link">Games Management</a>
+      </li>
     </ul>
     <ul class="navbar-right pure-menu-list">
       <li v-if="!username" class="pure-menu-item">

@@ -1,8 +1,8 @@
 <template>
   <div v-if="polls && polls.length > 0">
-    <div class="poll-wrapper" v-for="(poll, i) of polls" :key="i">
-      <div class="poll-header">
-        <div class="header">{{ poll.name }}</div>
+    <div class="table-wrapper" v-for="(poll, i) of polls" :key="i">
+      <div class="table-header-wrapper">
+        <div class="table-header">{{ poll.name }}</div>
       </div>
       <div class="poll-body">
         <table class="pure-table pure-table-horizontal full-width">
@@ -72,21 +72,6 @@ export default {
 </script>
 
 <style scoped>
-
-.poll-wrapper {
-  margin: 1rem;
-}
-
-.poll-header {
-  background-color: #E0E0E0;
-  border-bottom: 2px solid black;
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
-  color: black;
-  font-size: 1.4em;
-  font-weight: bold;
-  padding: 0.2em 0.5em;
-}
 
 td > img {
   display: table-cell;

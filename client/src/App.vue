@@ -41,4 +41,24 @@ body {
 .full-width {
   width: 100%;
 }
+
+.table-wrapper {
+  margin: 1rem;
+}
+
+.table-header-wrapper {
+  background-color: #E0E0E0;
+  border-bottom: 2px solid black;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  padding: 0.2em 0.5em;
+}
+
+.table-header {
+  color: black;
+  font-size: 1.4em;
+  font-weight: bold;
+  margin-left: 1rem;
+}
+
 </style>
