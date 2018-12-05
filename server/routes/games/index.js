@@ -39,7 +39,6 @@ routes.get('/searchByID/:id', (req, res) => {
 
   db.find({ model: 'GameSearch', filters })
     .then(data => {
-      console.log('searched the database')
       if (data.length > 0) {
         if (differenceInHours((new Date()), data[0].updatedAt) < config.cacheFor) {
           return data[0]
@@ -115,7 +114,9 @@ routes.get('/searchByName/:search', (req, res) => {
           })
       })
     })
-    .then(result => res.json({ success: true, data: result }))
+    .then(result => {
+      return res.json({ success: true, data: result })
+    })
     .catch(error => res.json({ success: false, error: error.message }))
 })
 

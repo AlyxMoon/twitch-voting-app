@@ -75,17 +75,21 @@ routes.get('/add/:gameId', (req, res) => {
     })
     // Add in UserVote association
     .then(response => {
-      return db.create({
-        model: 'UserVote',
-        data: {
-          poll_id: pollId,
-          vote_id: response.id,
-          twitchId
-        }
-      })
+      // Do promise all so that in the next chain we'll have the game name conveniently available, as that's all I currently care about displaying
+      return Promise.all([
+        db.create({
+          model: 'UserVote',
+          data: {
+            poll_id: pollId,
+            vote_id: response.id,
+            twitchId
+          }
+        }),
+        db.findOne({ model: 'Game', filters: { guid: gameId } })
+      ])
     })
-    .then(response => {
-      res.json({ success: true, data: response })
+    .then(([userVote, game]) => {
+      res.json({ success: true, data: { userVote, game } })
     })
     .catch(error => {
       res.json({ success: false, error: error.message })

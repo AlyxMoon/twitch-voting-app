@@ -1,53 +1,53 @@
 const path = require('path')
-const fetch = require('isomorphic-unfetch')
+
 const db = require(path.join(__dirname, '..', '..', 'db'))
+const errors = require(path.join(__dirname, '../../lib/errors'))
+const fetchJSON = require(path.join(__dirname, '../../lib/fetchJSON'))
 
 const vote = ({ context, params, bot }) => {
-  let game
   let gameToVote = params.join(' ')
-  if (gameToVote.length === 0) return
+  if (gameToVote.length === 0) throw new errors.NoVoteGiven()
 
-  fetch(`http://localhost:8080/api/games/searchByName/${gameToVote}`)
-    .then(response => response.json())
+  fetchJSON(`http://localhost:8080/api/games/searchByName/${gameToVote}`)
     .then(response => {
       let { results } = response.data
-      if (results.length === 0) {
-        bot.whisper(context.user.username, 'No results were found for that game!')
-        return
-      }
-      if (results.length > 1) {
-        bot.whisper(context.user.username, 'That vote was too vague. Please try again with a more specific vote')
-        return
-      }
+      if (results.length === 0) throw new errors.GameNotFound()
+      if (results.length > 1) throw new errors.GameTooVague()
 
       // Save game in database so we have a link for metainformation, like the name
-      return fetch(`http://localhost:8080/api/games`, {
-        method: 'POST',
-        body: JSON.stringify({ data: results[0] }),
-        headers: { 'Content-Type': 'application/json' }
-      }).then(response => response.json())
+      return Promise.all([
+        fetchJSON(`http://localhost:8080/api/games`, {
+          method: 'POST',
+          body: JSON.stringify({ data: results[0] }),
+          headers: { 'Content-Type': 'application/json' }
+        }),
+        db.findOne({ model: 'Poll', filters: { active: true } })
+      ])
     })
-    .then(response => {
-      if (!response || !response.success) return
-      game = response.data
-      return db.findOne({ model: 'Poll', filters: { active: true } })
-    })
-    .then(poll => {
-      if (!poll) return
+    .then(([game, poll]) => {
+      if (!game || !game.success) throw new errors.GameNotCreated('There was an error recalibrating the tabular data for the reticulations of your vote, please try again later')
+      if (!poll) throw new errors.PollNotFound()
 
       let query = `?twitchId=${context.user['user-id']}&displayname=${context.user['display-name']}&username=${context.user.username}`
 
-      return fetch(`http://localhost:8080/api/polls/${poll.id}/votes/add/${game.guid}${query}`)
-        .then(response => response.json())
+      return fetchJSON(`http://localhost:8080/api/polls/${poll.id}/votes/add/${game.data.guid}${query}`)
     })
     .then((response) => {
-      if (!response || !response.success) {
-        bot.whisper(context.user.username, `${context.user.username}, your vote has not been recorded. You voted already!`)
-      } else {
-        bot.whisper(context.user.username, `${context.user.username}, your vote has been recorded for ${game.name}`)
-      }
+      if (!response || !response.success) throw new errors.UserAlreadyVoted()
+
+      return bot.whisper(context.user.username, `your vote has been recorded for ${response.data.game.name}`)
     })
-    .catch(error => console.error(error.message, error.stack))
+    .catch(error => {
+      if (['GameNotFound', 'GameTooVague', 'UserAlreadyVoted'].includes(error.name)) {
+        return bot.whisper(context.user.username, error.message)
+      }
+
+      if (['GameNotCreated', 'PollNotFound'].includes(error.name)) {
+        return bot.whisper(context.user.username, error.message)
+      }
+
+      console.error(error.name, error.message, error.stack)
+    })
 }
 
 module.exports = vote
