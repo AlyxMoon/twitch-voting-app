@@ -9,6 +9,10 @@ const Game = thinkagain.createModel('Game', {
     id: { type: 'string' },
     guid: { type: 'string' },
     name: { type: 'string' },
+    banned: {
+      type: 'boolean',
+      default: false
+    },
     createdAt: {
       type: 'string',
       default: format(new Date())

@@ -129,6 +129,29 @@ routes.get('/searchByName/:search', (req, res) => {
     .catch(error => res.json({ success: false, error: error.message }))
 })
 
+routes.get('/ban/:id', (req, res) => {
+  let { id } = req.params
+
+  // TODO look if game has been voted on for active poll and remove any existing votes
+  db.update({ model: 'Game', id, data: { banned: true } })
+    .then(response => res.json({ success: true, data: response }))
+    .catch(error => {
+      console.error(error.message, error.stack)
+      return res.json({ success: false, error: error.message })
+    })
+})
+
+routes.get('/unban/:id', (req, res) => {
+  let { id } = req.params
+
+  db.update({ model: 'Game', id, data: { banned: false } })
+    .then(response => res.json({ success: true, data: response }))
+    .catch(error => {
+      console.error(error.message, error.stack)
+      return res.json({ success: false, error: error.message })
+    })
+})
+
 module.exports = routes
 
 const paginateResults = (url, queryParams, offset = 0, results = [], attempts = 0) => {
