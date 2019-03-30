@@ -16,7 +16,10 @@
           <tbody>
             <template v-for="(vote, j) of poll.votes">
               <tr :key="'game-info-' + j">
-                <td>{{ vote.gameInfo.name }}</td>
+                <td>
+                  <button class="pure-button pure-button-error" @click="ban(vote.gameInfo.id)">Ban</button>
+                  {{ vote.gameInfo.name }} {{ vote.gameInfo.banned ? '(banned)' : ''}}
+                </td>
                 <td class="center">{{ vote.count }}</td>
                 <td><img class="center" v-if="vote.emoteLink" :src="vote.emoteLink" /></td>
               </tr>
@@ -30,6 +33,7 @@
 
 <script>
 import fetch from 'isomorphic-unfetch'
+import fetchJSON from '@/lib/fetchJSON'
 import { serverAddress } from '@/consts'
 
 export default {
@@ -66,6 +70,14 @@ export default {
       return this.polls[pollIndex].userVotes.filter(userVote => {
         return userVote.vote_id === voteId
       })
+    },
+
+    ban (id) {
+      fetchJSON(`${serverAddress}/api/games/ban/${id}`)
+        .then(result => {
+          this.banned.push(result.data)
+        })
+        .catch(error => console.error(error))
     }
   }
 }
