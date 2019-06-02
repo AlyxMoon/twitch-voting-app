@@ -106,7 +106,7 @@ routes.delete('/:id', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
   let id = req.params.id
 
-  db.delete({ ...model, id })
+  db.delete({ ...model, id, joinedModels: ['userVotes', 'votes'] })
     .then(result => {
       res.json({ success: true, data: result })
     })

@@ -116,13 +116,18 @@ module.exports = {
     })
   },
 
-  delete: ({ model = '', id }) => {
+  delete: ({ model = '', id, joinedModels }) => {
     return new Promise((resolve, reject) => {
       if (!isKnownModel(model)) {
         return reject(new Error(`Model ${model} was not recognized as a valid type`))
       }
 
-      knownModels[model].get(id).getJoin().run().then(row => {
+      let getJoinModels = {}
+      if (joinedModels) {
+        joinedModels.forEach(m => { getJoinModels[m] = true })
+      }
+
+      knownModels[model].get(id).getJoin(getJoinModels).run().then(row => {
         resolve(row.deleteAll())
       })
     })
