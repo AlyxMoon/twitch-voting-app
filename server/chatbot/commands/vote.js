@@ -41,6 +41,8 @@ const vote = ({ context, params, bot }) => {
       if (!game || !game.success) throw new errors.GameNotCreated('There was an error recalibrating the tabular data for the reticulations of your vote, please try again later')
       if (!poll) throw new errors.PollNotFound()
 
+      if (game.data.banned) throw new errors.GameBanned()
+
       let query = `?twitchId=${context.user['user-id']}&displayname=${context.user['display-name']}&username=${context.user.username}`
 
       return fetchJSON(`http://localhost:8080/api/polls/${poll.id}/votes/add/${game.data.guid}${query}`)
@@ -51,11 +53,7 @@ const vote = ({ context, params, bot }) => {
       return bot.whisper(context.user.username, `your vote has been recorded for ${response.data.game.name}`)
     })
     .catch(error => {
-      if (['GameNotFound', 'GameTooVague', 'UserAlreadyVoted'].includes(error.name)) {
-        return bot.whisper(context.user.username, error.message)
-      }
-
-      if (['GameNotCreated', 'PollNotFound'].includes(error.name)) {
+      if (['GameBanned', 'GameNotCreated', 'GameNotFound', 'GameTooVague', 'PollNotFound', 'UserAlreadyVoted'].includes(error.name)) {
         return bot.whisper(context.user.username, error.message)
       }
 

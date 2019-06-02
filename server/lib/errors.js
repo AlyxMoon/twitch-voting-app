@@ -1,3 +1,12 @@
+class GameBanned extends Error {
+  constructor (message = '', extra = null) {
+    super()
+    Error.captureStackTrace(this, this.constructor)
+    this.name = this.constructor.name
+    this.message = message || 'The game you tried to vote for is banned, so your vote has not been counted.'
+    this.extra = extra
+  }
+}
 
 class GameNotCreated extends Error {
   constructor (message = '', extra = null) {
@@ -60,6 +69,7 @@ class UserAlreadyVoted extends Error {
 }
 
 module.exports = {
+  GameBanned,
   GameNotCreated,
   GameNotFound,
   GameTooVague,
