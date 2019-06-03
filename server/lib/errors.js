@@ -58,12 +58,32 @@ class PollNotFound extends Error {
   }
 }
 
+class UserHasNotVoted extends Error {
+  constructor (message = '', extra = null) {
+    super()
+    Error.captureStackTrace(this, this.constructor)
+    this.name = this.constructor.name
+    this.message = message || 'The user has not voted yet.'
+    this.extra = extra
+  }
+}
+
 class UserAlreadyVoted extends Error {
   constructor (message = '', extra = null) {
     super()
     Error.captureStackTrace(this, this.constructor)
     this.name = this.constructor.name
     this.message = message || 'You have already voted in this poll.'
+    this.extra = extra
+  }
+}
+
+class VoteDoesNotExist extends Error {
+  constructor (message = '', extra = null) {
+    super()
+    Error.captureStackTrace(this, this.constructor)
+    this.name = this.constructor.name
+    this.message = message || 'There are no votes to remove for this game yet.'
     this.extra = extra
   }
 }
@@ -75,5 +95,7 @@ module.exports = {
   GameTooVague,
   NoVoteGiven,
   PollNotFound,
-  UserAlreadyVoted
+  UserHasNotVoted,
+  UserAlreadyVoted,
+  VoteDoesNotExist
 }

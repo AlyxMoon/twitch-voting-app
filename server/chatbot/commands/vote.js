@@ -44,7 +44,6 @@ const vote = ({ context, params, bot }) => {
       if (game.data.banned) throw new errors.GameBanned()
 
       let query = `?twitchId=${context.user['user-id']}&displayname=${context.user['display-name']}&username=${context.user.username}`
-
       return fetchJSON(`http://localhost:8080/api/polls/${poll.id}/votes/add/${game.data.guid}${query}`)
     })
     .then((response) => {

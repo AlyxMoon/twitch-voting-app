@@ -116,24 +116,55 @@ routes.post('/:id/reaction', (req, res) => {
 })
 
 // Remove a vote
-routes.get('/remove/:gameId', (req, res) => {
+routes.get('/remove', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
-  db.find({
-    ...model,
-    filters: { poll_id: req.pollId, game_id: req.params.gameId }
+  let { displayname, username, twitchId } = req.query
+  let { pollId } = req
+
+  let userVoteId
+
+  db.findOrCreate({
+    model: 'User',
+    key: 'twitchId',
+    data: { displayname, username, twitchId }
   })
+    .then(() => {
+      return db.find({
+        model: 'UserVote',
+        filters: { twitchId, poll_id: pollId }
+      })
+    })
     .then(response => {
-      if (response && response.length > 0) {
+      if (response.length === 1) {
+        console.log('kjqewq ====', response)
+        userVoteId = response[0].id
+
+        return db.findOne({
+          ...model,
+          filters: { poll_id: pollId, id: response.vote_id }
+        })
+      } else {
+        throw new Error('The user has not voted yet.')
+      }
+    })
+    .then(response => {
+      if (response) {
+        console.log('========', response)
         return db.update({
           ...model,
-          id: response[0].id,
-          data: {
-            count: response[0].count - 1 > 0 ? response[0].count - 1 : 0
-          }
+          id: response.id,
+          data: { count: response.count - 1 }
         })
+      } else {
+        throw new Error('There are no votes to remove for this game yet.')
       }
-      return response
+    })
+    .then(() => {
+      return db.delete({
+        model: 'UserVote',
+        id: userVoteId
+      })
     })
     .then(response => {
       res.json({ success: true, data: response })
