@@ -1,10 +1,6 @@
 <template>
   <div>
-
-    <div class="search">
-      <input type="text" placeholder="Game to Search" />
-      <input type="submit" />
-    </div>
+    <componentGameSearch></componentGameSearch>
 
     <div class="table-wrapper">
       <div class="table-header-wrapper">
@@ -71,9 +67,13 @@
 <script>
 import fetchJSON from '@/lib/fetchJSON'
 import { serverAddress } from '@/consts'
+import { GameSearch } from '@/components'
 
 export default {
   name: 'Games',
+  components: {
+    'componentGameSearch': GameSearch
+  },
 
   data () {
     return {
@@ -127,12 +127,5 @@ export default {
 </script>
 
 <style scoped>
-.search {
-  margin-bottom: 2rem;
-  margin-top: 1rem;
-}
 
-input[type="submit"] {
-  color: black;
-}
 </style>
