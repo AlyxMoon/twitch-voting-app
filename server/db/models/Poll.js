@@ -8,6 +8,10 @@ const Poll = thinkagain.createModel('Poll', {
   properties: {
     id: { type: 'string' },
     active: { type: 'boolean' },
+    allowVoteChange: {
+      type: 'boolean',
+      default: true
+    },
     name: { type: 'string' },
     createdAt: {
       type: 'string',

@@ -18,7 +18,7 @@
     <hr />
     <componentPollView
       v-if="selectedPoll !== null"
-      :emotes="emotes" :poll="polls[selectedPoll]" :setReaction="setReaction" :unviewPoll="unviewPoll">
+      :emotes="emotes" :poll="polls[selectedPoll]" :setReaction="setReaction" :setAllowVoteChange="setAllowVoteChange" :unviewPoll="unviewPoll">
     </componentPollView>
     <componentPollList
       v-else
@@ -157,6 +157,26 @@ export default {
             let poll = this.polls.find(poll => poll.id === pollId)
             let index = poll.votes.findIndex(vote => vote.id === voteId)
             poll.votes.splice(index, 1, res.data)
+          })
+      }
+    },
+
+    setAllowVoteChange (pollId, allow) {
+      if (pollId && allow !== undefined) {
+        fetch(`${serverAddress}/api/polls/${pollId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json; charset=utf-8' },
+          body: JSON.stringify({ data: { allowVoteChange: allow } })
+        })
+          .then(res => res.json())
+          .then(res => {
+            if (!res.success) {
+              this.error = res.error
+              return console.error(res.error)
+            }
+
+            let index = this.polls.findIndex(poll => poll.id === pollId)
+            this.polls.splice(index, 1, res.data)
           })
       }
     }

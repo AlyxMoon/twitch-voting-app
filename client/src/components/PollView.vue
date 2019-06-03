@@ -11,6 +11,13 @@
         <dt class="pure-u-1-3">Current Active Poll:</dt>
         <dd class="pure-u-2-3">{{ poll.active ? 'Yes' : 'No' }}</dd>
       </div>
+      <div>
+        <dt class="pure-u-1-3">Changes are allowed?:</dt>
+        <dd class="pure-u-2-3">
+          <span v-if="poll.allowVoteChange">Yes <button class="pure-button" @click="setAllowVoteChange(poll.id, false)">Disable vote changes</button></span>
+          <span v-else>No <button class="pure-button" @click="setAllowVoteChange(poll.id, true)">Enable vote changes</button></span>
+        </dd>
+      </div>
     </dl>
     <h3>Votes</h3>
     <table v-if="poll.votes && poll.votes.length > 0" class="pure-table">
@@ -57,7 +64,7 @@
 <script>
 export default {
   name: 'pollView',
-  props: ['emotes', 'poll', 'setReaction', 'unviewPoll'],
+  props: ['emotes', 'poll', 'setAllowVoteChange', 'setReaction', 'unviewPoll'],
   data () {
     return { newEmoteLink: {} }
   }
@@ -77,6 +84,8 @@ dl div {
 dd, dt {
   display: table-cell;
   margin: 0;
+  padding: 8px 0;
+  vertical-align: middle;
 }
 dt {
   font-weight: bold;

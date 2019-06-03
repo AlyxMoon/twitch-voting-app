@@ -48,6 +48,16 @@ class NoVoteGiven extends Error {
   }
 }
 
+class PollCannotChangeVote extends Error {
+  constructor (message = '', extra = null) {
+    super()
+    Error.captureStackTrace(this, this.constructor)
+    this.name = this.constructor.name
+    this.message = message || 'The currently active poll does not allow changing your vote.'
+    this.extra = extra
+  }
+}
+
 class PollNotFound extends Error {
   constructor (message = '', extra = null) {
     super()
@@ -94,6 +104,7 @@ module.exports = {
   GameNotFound,
   GameTooVague,
   NoVoteGiven,
+  PollCannotChangeVote,
   PollNotFound,
   UserHasNotVoted,
   UserAlreadyVoted,
