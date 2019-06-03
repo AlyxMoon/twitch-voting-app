@@ -137,7 +137,6 @@ routes.get('/remove', (req, res) => {
     })
     .then(response => {
       if (response.length === 1) {
-        console.log('kjqewq ====', response)
         userVoteId = response[0].id
 
         return db.findOne({
@@ -150,12 +149,18 @@ routes.get('/remove', (req, res) => {
     })
     .then(response => {
       if (response) {
-        console.log('========', response)
-        return db.update({
-          ...model,
-          id: response.id,
-          data: { count: response.count - 1 }
-        })
+        if (response.count - 1 === 0) {
+          return db.delete({
+            ...model,
+            id: response.id
+          })
+        } else {
+          return db.update({
+            ...model,
+            id: response.id,
+            data: { count: response.count - 1 }
+          })
+        }
       } else {
         throw new Error('There are no votes to remove for this game yet.')
       }
