@@ -41,26 +41,6 @@
         </tbody>
       </table>
     </div>
-
-    <div class="table-wrapper">
-      <div class="table-header-wrapper">
-        <h1 class="table-header">Cached Games</h1>
-      </div>
-      <table class="pure-table pure-table-horizontal full-width">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>GUID</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="game in games" :key="'game-' + game.id">
-            <td><button class="pure-button pure-button-error" @click="ban(game.id)">Ban</button> {{ game.name }}</td>
-            <td>{{ game.guid }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 </template>
 
