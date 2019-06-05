@@ -8,7 +8,9 @@ const config = require(path.join(__dirname, '..', '..', 'config', 'games'))
 const { buildQueryParamsString } = require(path.join(__dirname, '..', '..', 'util'))
 
 routes.get('/', (req, res) => {
-  db.find({ model: 'Game' })
+  let filters = req.query.filters ? JSON.parse(decodeURI(req.query.filters)) : {}
+
+  db.find({ model: 'Game', filters })
     .then(response => res.json({ success: true, data: response }))
     .catch(error => {
       console.error(error.message, error.stack)

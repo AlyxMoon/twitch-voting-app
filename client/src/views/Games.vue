@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { fetchJSON } from '@/lib'
+import { fetchJSON, parseFiltersForURI } from '@/lib'
 import { serverAddress } from '@/consts'
 import { GameSearch } from '@/components'
 
@@ -58,32 +58,30 @@ export default {
   data () {
     return {
       aliases: [],
-      banned: [],
-      games: []
+      banned: []
     }
   },
 
   beforeRouteEnter (to, from, next) {
-    fetchJSON(`${serverAddress}/api/games`)
+    fetchJSON(`${serverAddress}/api/games?filters=${parseFiltersForURI({ banned: true })}`)
       .then(result => {
         if (!result.success) throw result.error
 
-        return next(vm => vm.setData({ games: result.data }))
+        return next(vm => vm.setData({ banned: result.data }))
       })
       .catch(error => next(vm => vm.setData({ error: error })))
   },
 
   methods: {
-    setData ({ error, aliases, games }) {
+    setData ({ error, aliases, banned }) {
       if (error) {
         console.error(error)
         this.error = error
       }
 
       if (aliases) this.aliases = aliases
-      if (games) {
-        this.games = games
-        this.banned = games.filter(game => game.banned)
+      if (banned) {
+        this.banned = banned
       }
     },
 
