@@ -92,9 +92,11 @@ module.exports = {
         updatedAt: dateFns.format(new Date())
       }
 
-      knownModels[model].get(id).getJoin().run().then(row => {
-        resolve(row.merge(dataToSave).saveAll())
-      })
+      knownModels[model].get(id).getJoin().run()
+        .then(row => {
+          resolve(row.merge(dataToSave).saveAll())
+        })
+        .catch(reject)
     })
   },
 

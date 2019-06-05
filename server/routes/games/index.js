@@ -82,7 +82,7 @@ routes.get('/searchByID/:id', (req, res) => {
 routes.get('/searchByName/:search', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
-  let search = req.params.search
+  let search = (req.params.search || '').toLocaleLowerCase()
   let query = {
     api_key: config.apiKey,
     field_list: 'name,guid',

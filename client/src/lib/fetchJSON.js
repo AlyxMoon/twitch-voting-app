@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-unfetch'
 
-export default (url, options = {}) => {
+export const fetchJSON = (url, options = {}) => {
   return fetch(url, options).then(response => response.json())
 }

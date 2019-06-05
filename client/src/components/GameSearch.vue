@@ -5,31 +5,64 @@
       <input type="text" placeholder="Game to Search" v-model="searchText" />
     </div>
     <ul class="search-results" v-if="searchResults && searchResults.length > 0">
-      <li v-for="result in searchResults" :key="result">
-        {{ result }}
+      <li v-for="(result, i) in searchResults" :key="'search-result-' + i">
+        <button class="pure-button pure-button-error" @click="doBan(result)">Ban Game</button>
+        {{ result.name }}
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+import { fetchJSON } from '@/lib'
+import { serverAddress } from '@/consts'
+
 export default {
   name: 'gameSearch',
+  props: ['ban'],
+
   data () {
     return {
       searchResults: [],
-      searchText: '',
-      placeholderGames: [
-        'XCOM', 'XCOM 2', 'Racer Car Bois', 'Potato Smasher', 'Word Maker', 'Atom'
-      ]
+      searchText: ''
     }
   },
 
   methods: {
     search: function () {
-      let search = this.searchText.toLocaleLowerCase()
-      this.searchResults = this.placeholderGames.filter(game => game.toLocaleLowerCase().includes(search))
+      if (!this.searchText) return
+
+      fetchJSON(`${serverAddress}/api/games/searchByName/${this.searchText}`)
+        .then(games => {
+          if (!games.success) throw new Error(games.error)
+
+          this.searchResults = games.data.results
+        })
+        .catch(console.error)
+    },
+
+    doBan: function (game) {
+      if (!game) return
+
+      fetchJSON(`${serverAddress}/api/games`, {
+        method: 'POST',
+        body: JSON.stringify({ data: game }),
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(result => {
+          console.log('am I the error?', result)
+          if (!result.success) throw new Error(result.error)
+
+          console.log('guess not')
+          return this.ban(result.data.id)
+        })
+        .then(result => {
+          if (!result.success) throw new Error(result.error)
+        })
+        .catch(console.error)
     }
+
+    // alias: TODO: Fill in this stuff
   }
 }
 </script>

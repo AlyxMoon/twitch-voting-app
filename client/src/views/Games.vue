@@ -1,6 +1,6 @@
 <template>
   <div>
-    <componentGameSearch></componentGameSearch>
+    <componentGameSearch :ban="ban"></componentGameSearch>
 
     <div class="table-wrapper">
       <div class="table-header-wrapper">
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import fetchJSON from '@/lib/fetchJSON'
+import { fetchJSON } from '@/lib'
 import { serverAddress } from '@/consts'
 import { GameSearch } from '@/components'
 
@@ -108,9 +108,10 @@ export default {
     },
 
     ban (id) {
-      fetchJSON(`${serverAddress}/api/games/ban/${id}`)
+      return fetchJSON(`${serverAddress}/api/games/ban/${id}`)
         .then(result => {
           this.banned.push(result.data)
+          return result
         })
         .catch(error => console.error(error))
     },

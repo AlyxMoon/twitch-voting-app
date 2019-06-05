@@ -33,7 +33,7 @@
 
 <script>
 import fetch from 'isomorphic-unfetch'
-import fetchJSON from '@/lib/fetchJSON'
+import { fetchJSON } from '@/lib'
 import { serverAddress } from '@/consts'
 
 export default {
@@ -47,7 +47,7 @@ export default {
   },
 
   beforeRouteEnter (to, from, next) {
-    fetch(fetch(`${serverAddress}/api/polls`)
+    fetch(`${serverAddress}/api/polls`)
       .then(res => res.json())
       .then(result => {
         if (!result.success) {
@@ -55,7 +55,7 @@ export default {
         }
 
         return next(vm => vm.setData({ polls: result.data }))
-      }))
+      })
   },
 
   methods: {
