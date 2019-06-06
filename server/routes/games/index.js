@@ -154,6 +154,35 @@ routes.get('/unban/:id', (req, res) => {
     })
 })
 
+routes.post('/alias/create', (req, res) => {
+  const { gameId, name } = req.body.data
+  if (!gameId || !name) {
+    res.json({ success: false, error: 'a required field was not included' })
+  }
+
+  db.create({ model: 'GameAlias', data: { name, game_id: gameId } })
+    .then(response => {
+      res.json({ success: true, data: response })
+    })
+    .catch(error => {
+      console.error(error.message, error.stack)
+      res.json({ success: false, error: error.message })
+    })
+})
+
+routes.get('/alias/remove/:id', (req, res) => {
+  const { id } = req.params
+
+  db.delete({ model: 'GameAlias', id })
+    .then(response => {
+      res.json({ success: true, data: response })
+    })
+    .catch(error => {
+      console.error(error.message, error.stack)
+      res.json({ success: false, error: error.message })
+    })
+})
+
 module.exports = routes
 
 const paginateResults = (url, queryParams, offset = 0, results = [], attempts = 0) => {

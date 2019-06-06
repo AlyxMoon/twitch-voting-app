@@ -1,15 +1,24 @@
 <template>
   <div class="search-component">
-    <div class="search-form">
+    <div class="search-form" v-if="!showCreateAliasForm">
       <button class="pure-button pure-button-success" @click="search()">Search</button>
       <input type="text" placeholder="Game to Search" v-model="searchText" />
     </div>
-    <ul class="search-results" v-if="searchResults && searchResults.length > 0">
+    <ul class="search-results" v-if="!showCreateAliasForm && searchResults && searchResults.length > 0">
       <li v-for="(result, i) in searchResults" :key="'search-result-' + i">
         <button class="pure-button pure-button-error" @click="doBan(result)">Ban Game</button>
+        <button class="pure-button pure-button-secondary" @click="promptCreateAlias(result)">Create Alias</button>
         {{ result.name }}
       </li>
     </ul>
+    <div class="alias-form-wrapper" v-if="showCreateAliasForm">
+      <label class="form-help">Creating alias for {{ aliasData.gameName }}</label>
+      <div class="alias-form">
+        <input type="text" v-model="aliasData.name" placeholder="alias" />
+        <button class="pure-button pure-button-success" @click="doCreateAlias()">Create</button>
+        <button class="pure-button pure-button-error" @click="cancelCreateAlias()">Cancel</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -19,12 +28,14 @@ import { serverAddress } from '@/consts'
 
 export default {
   name: 'gameSearch',
-  props: ['ban'],
+  props: ['ban', 'createAlias'],
 
   data () {
     return {
       searchResults: [],
-      searchText: ''
+      searchText: '',
+      showCreateAliasForm: false,
+      aliasData: { name: '', gameId: '', gameName: '' }
     }
   },
 
@@ -50,19 +61,45 @@ export default {
         headers: { 'Content-Type': 'application/json' }
       })
         .then(result => {
-          console.log('am I the error?', result)
           if (!result.success) throw new Error(result.error)
 
-          console.log('guess not')
           return this.ban(result.data.id)
         })
         .then(result => {
           if (!result.success) throw new Error(result.error)
         })
         .catch(console.error)
-    }
+    },
 
-    // alias: TODO: Fill in this stuff
+    promptCreateAlias: function (game) {
+      if (!game) return
+
+      fetchJSON(`${serverAddress}/api/games`, {
+        method: 'POST',
+        body: JSON.stringify({ data: game }),
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(result => {
+          if (!result.success) throw new Error(result.error)
+
+          this.aliasData.gameId = result.data.id
+          this.aliasData.gameName = result.data.name
+          this.showCreateAliasForm = true
+        })
+        .catch(console.error)
+    },
+
+    doCreateAlias: function () {
+      this.createAlias(this.aliasData)
+        .then(() => this.cancelCreateAlias())
+    },
+
+    cancelCreateAlias: function () {
+      this.aliasData.name = ''
+      this.aliasData.gameId = ''
+      this.aliasData.gameName = ''
+      this.showCreateAliasForm = false
+    }
   }
 }
 </script>
@@ -78,13 +115,13 @@ export default {
   width: 95%;
 }
 
-.search-form {
+.search-form, .alias-form {
   width: 100%;
   display: flex;
   align-items: row;
 }
 
-.search-form button {
+.search-form button, .alias-form button  {
   flex-grow: 1;
 
   border-radius: 0;
@@ -98,12 +135,8 @@ export default {
   vertical-align: baseline;
 }
 
-.search-form input {
+.search-form input, .alias-form input {
   flex-grow: 4;
-
-  color: black;
-
-  height: 28px;
 
   padding-left: 10px;
   padding-top: 1px;

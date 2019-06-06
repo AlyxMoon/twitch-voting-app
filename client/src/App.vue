@@ -61,4 +61,9 @@ body {
   margin-left: 1rem;
 }
 
+input {
+  color: black;
+  height: 28px;
+}
+
 </style>

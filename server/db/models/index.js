@@ -1,4 +1,5 @@
 const Game = require('./Game')
+const GameAlias = require('./GameAlias')
 const GameSearch = require('./GameSearch')
 const Poll = require('./Poll')
 const User = require('./User')
@@ -13,4 +14,6 @@ UserVote.belongsTo(User, 'user', 'twitchId', 'twitchId')
 Vote.belongsTo(Poll, 'poll', 'poll_id', 'id')
 Vote.belongsTo(Game, 'gameInfo', 'game_id', 'guid')
 
-module.exports = { Game, GameSearch, Poll, User, UserVote, Vote }
+Game.hasMany(GameAlias, 'aliases', 'id', 'game_id')
+
+module.exports = { Game, GameAlias, GameSearch, Poll, User, UserVote, Vote }
