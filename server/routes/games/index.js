@@ -36,6 +36,17 @@ routes.post('/', (req, res) => {
     })
 })
 
+routes.get('/:id', (req, res) => {
+  let { id } = req.params
+
+  db.get({ model: 'Game', id })
+    .then(response => res.json({ success: true, data: response }))
+    .catch(error => {
+      console.error(error.message, error.stack)
+      return res.json({ success: false, error: error.message })
+    })
+})
+
 routes.get('/searchByID/:id', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 

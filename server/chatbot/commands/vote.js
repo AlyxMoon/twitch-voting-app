@@ -10,11 +10,17 @@ const vote = ({ context, params, bot }) => {
   return Promise.resolve()
     .then(() => {
       if (gameToVote.length === 0) throw new errors.NoVoteGiven()
-      return fetchJSON(`http://localhost:8080/api/games/searchByName/${gameToVote}`)
+
+      return new Promise((resolve, reject) => {
+        db.get({ model: 'GameAlias', id: gameToVote })
+          .then(response => fetchJSON(`http://localhost:8080/api/games/${response.game_id}`))
+          .catch(() => fetchJSON(`http://localhost:8080/api/games/searchByName/${gameToVote}`))
+          .then(resolve)
+      })
     })
     .then(response => {
       let index = 0
-      let { results } = response.data
+      let results = response.data.results || [response.data]
 
       // If no results, then obviously no game has been found, that's a problem
       if (results.length === 0) throw new errors.GameNotFound()
