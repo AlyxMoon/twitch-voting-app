@@ -170,10 +170,10 @@ routes.post('/alias/create', (req, res) => {
     })
 })
 
-routes.get('/alias/remove/:id', (req, res) => {
-  const { id } = req.params
+routes.get('/alias/remove/:aliasName', (req, res) => {
+  const aliasName = decodeURIComponent(req.params.aliasName || '')
 
-  db.delete({ model: 'GameAlias', id })
+  db.delete({ model: 'GameAlias', id: aliasName })
     .then(response => {
       res.json({ success: true, data: response })
     })

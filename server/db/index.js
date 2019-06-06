@@ -129,9 +129,11 @@ module.exports = {
         joinedModels.forEach(m => { getJoinModels[m] = true })
       }
 
-      knownModels[model].get(id).getJoin(getJoinModels).run().then(row => {
-        resolve(row.deleteAll())
-      })
+      knownModels[model].get(id).getJoin(getJoinModels).run()
+        .then(row => {
+          resolve(row.deleteAll())
+        })
+        .catch(reject)
     })
   }
 }

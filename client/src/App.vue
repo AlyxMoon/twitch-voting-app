@@ -66,4 +66,8 @@ input {
   height: 28px;
 }
 
+.v-align-top {
+  vertical-align: top;
+}
+
 </style>
