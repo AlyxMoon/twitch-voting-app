@@ -71,4 +71,4 @@ https://lirikker.com/lirik/subday/
 - [ ] Complete chatbot
   - [ ] Allow connecting a Twitch account to be used as the chatbot
   - [x] Listen to chat and respond to the `!vote` command to record a user's choice
-  - [ ] Listen to chat and respond to the `!myvote` command to tell a user if they have made a vote on current poll
+  - [x] Listen to chat and respond to the `!myvote` command to tell a user if they have made a vote on current poll
