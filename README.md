@@ -36,11 +36,11 @@ https://lirikker.com/lirik/subday/
   - [x] Login component
     - [x] Link to Twitch auth
   - [ ] Games component
-    - [ ] Load list of games
-    - [ ] Allow searching the game list
-    - [ ] Allow Pokket/mods to ban a game so it cannot be voted on
-    - [ ] Allow Pokket/mods to unban a game
-    - [ ] Allow Pokket/mods to create aliases for a game
+    - [x] Load list of games
+    - [x] Allow searching the game list
+    - [x] Allow Pokket/mods to ban a game so it cannot be voted on
+    - [x] Allow Pokket/mods to unban a game
+    - [x] Allow Pokket/mods to create aliases for a game
   - [ ] Page for stream overlay
     - [ ] Active connection to server, show minimalist list of poll/top votes
     - [ ] Active connection to server, show message when a user votes
@@ -63,8 +63,8 @@ https://lirikker.com/lirik/subday/
     - [x] Register and get an API key
     - [x] Switch to /games endpoint
     - [ ] Filter by game name/platforms
-  - [ ] Save list of banned games to the db
-  - [ ] Save alias for a game to the db
+  - [x] Save list of banned games to the db
+  - [x] Save alias for a game to the db
   - [ ] Allow configuring what platforms to search for
 
 
