@@ -11,6 +11,7 @@ Poll.hasMany(Vote, 'votes', 'id', 'poll_id')
 
 UserVote.belongsTo(User, 'user', 'twitchId', 'twitchId')
 
+Vote.hasMany(UserVote, 'userVotes', 'id', 'vote_id')
 Vote.belongsTo(Poll, 'poll', 'poll_id', 'id')
 Vote.belongsTo(Game, 'gameInfo', 'game_id', 'guid')
 

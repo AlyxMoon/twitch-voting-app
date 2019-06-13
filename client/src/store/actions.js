@@ -18,3 +18,11 @@ export const logout = ({ commit }) => {
       }
     })
 }
+
+export const deleteVote = ({ commit }, { pollId, voteId }) => {
+  fetchJSON(`${serverAddress}/api/polls/${pollId}/votes/${voteId}/remove`)
+    .then((response) => {
+      if (!response.success) throw new Error(response.error)
+    })
+    .catch(console.errror)
+}

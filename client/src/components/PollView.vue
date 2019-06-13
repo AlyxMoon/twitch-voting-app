@@ -26,6 +26,7 @@
         <th>Current Votes</th>
         <th>Reaction</th>
         <th v-if="isUserAdmin">Change Reaction</th>
+        <th></th>
       </thead>
       <tbody>
         <tr v-for="vote in poll.votes" :key="'vote-' + vote.id">
@@ -54,6 +55,9 @@
               Save
             </button>
           </td>
+          <td>
+            <button class="pure-button pure-button-error" @click="deleteVote({ pollId: poll.id, voteId: vote.id })">Remove game from poll</button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -62,7 +66,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'pollView',
@@ -75,6 +79,10 @@ export default {
     ...mapGetters({
       isUserAdmin: 'isUserAdmin'
     })
+  },
+
+  methods: {
+    ...mapActions(['deleteVote'])
   }
 }
 </script>

@@ -32,7 +32,7 @@ https://lirikker.com/lirik/subday/
     - [ ] Show list of top ten games that have been voted on
     - [ ] Option to show full list of voted games
     - [x] Allow Pokket/mods to give a reaction to a game
-    - [ ] Allow Pokket/mods to remove a game from the selection
+    - [x] Allow Pokket/mods to remove a game from the selection
   - [x] Login component
     - [x] Link to Twitch auth
   - [ ] Games component

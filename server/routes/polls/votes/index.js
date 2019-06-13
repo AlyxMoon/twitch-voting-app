@@ -2,7 +2,7 @@ const path = require('path')
 
 const routes = require('express').Router()
 const db = require(path.join(__dirname, '..', '..', '..', 'db'))
-const { adminAccessOnly } = require(path.join(__dirname, '../../../middleware'))
+const { adminAccessOnly, modAccessOnly } = require(path.join(__dirname, '../../../middleware'))
 
 const model = { model: 'Vote' }
 
@@ -17,6 +17,35 @@ routes.get('/', (req, res) => {
       res.json({ success: true, data: response })
     })
     .catch(error => {
+      res.json({ success: false, error: error.message })
+    })
+})
+
+routes.get('/:id/remove', modAccessOnly, (req, res) => {
+  db.delete({ ...model, id: req.params.id, joinedModels: ['userVotes'] })
+    .then(result => {
+      res.json({ success: true, data: result })
+    })
+    .catch(error => {
+      console.error(error.message, error.stack)
+      res.json({ success: false, error: error.message })
+    })
+})
+
+// Set a reaction on a vote
+routes.post('/:id/reaction', adminAccessOnly, (req, res) => {
+  let { emoteLink } = req.body
+  let id = req.params.id
+  if (!emoteLink) {
+    return res.json({ success: false, error: 'a required field was not included' })
+  }
+
+  db.update({ ...model, id, data: { emoteLink } })
+    .then(result => {
+      res.json({ success: true, data: result })
+    })
+    .catch(error => {
+      console.error(error.message, error.stack)
       res.json({ success: false, error: error.message })
     })
 })
@@ -93,25 +122,6 @@ routes.get('/add/:gameId', adminAccessOnly, (req, res) => {
       res.json({ success: true, data: { userVote, game } })
     })
     .catch(error => {
-      res.json({ success: false, error: error.message })
-    })
-})
-
-// Set a reaction on a vote
-routes.post('/:id/reaction', adminAccessOnly, (req, res) => {
-  res.setHeader('Content-Type', 'application/json')
-  let { emoteLink } = req.body
-  let id = req.params.id
-  if (!emoteLink) {
-    return res.json({ success: false, error: 'a required field was not included' })
-  }
-
-  db.update({ ...model, id, data: { emoteLink } })
-    .then(result => {
-      res.json({ success: true, data: result })
-    })
-    .catch(error => {
-      console.error(error.message, error.stack)
       res.json({ success: false, error: error.message })
     })
 })
