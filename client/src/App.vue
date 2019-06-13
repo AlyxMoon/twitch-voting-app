@@ -6,12 +6,22 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { Navbar } from '@/components'
 
 export default {
   name: 'App',
   components: {
     'component-navbar': Navbar
+  },
+  computed: {
+    ...mapState({
+      user: state => state.user
+    })
+  },
+
+  created () {
+    this.$store.dispatch('getUserFromSession')
   }
 }
 </script>

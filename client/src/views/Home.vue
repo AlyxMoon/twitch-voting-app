@@ -17,7 +17,7 @@
             <template v-for="(vote, j) of poll.votes">
               <tr :key="'game-info-' + j">
                 <td>
-                  <button class="pure-button pure-button-error" @click="ban(vote.gameInfo.id)">Ban</button>
+                  <button v-if="isUserModOrAdmin" class="pure-button pure-button-error" @click="ban(vote.gameInfo.id)">Ban</button>
                   {{ vote.gameInfo.name }} {{ vote.gameInfo.banned ? '(banned)' : ''}}
                 </td>
                 <td class="center">{{ vote.count }}</td>
@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { fetchJSON } from '@/lib'
 import { serverAddress } from '@/consts'
 
@@ -43,6 +44,12 @@ export default {
       error: null,
       polls: null
     }
+  },
+  computed: {
+    ...mapGetters({
+      user: 'getUser',
+      isUserModOrAdmin: 'isUserModOrAdmin'
+    })
   },
 
   beforeRouteEnter (to, from, next) {

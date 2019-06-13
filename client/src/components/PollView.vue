@@ -25,7 +25,7 @@
         <th>Game</th>
         <th>Current Votes</th>
         <th>Reaction</th>
-        <th>Change Reaction</th>
+        <th v-if="isUserAdmin">Change Reaction</th>
       </thead>
       <tbody>
         <tr v-for="vote in poll.votes" :key="'vote-' + vote.id">
@@ -33,7 +33,7 @@
           <td>{{ vote.count }}</td>
           <td v-if="vote.emoteLink"><img class="center" :src="vote.emoteLink" /></td>
           <td v-else></td>
-          <td>
+          <td v-if="isUserAdmin">
             <div class="image-dropdown">
               <template v-for="emote in emotes">
                 <input
@@ -62,11 +62,19 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'pollView',
   props: ['emotes', 'poll', 'setAllowVoteChange', 'setReaction', 'unviewPoll'],
   data () {
     return { newEmoteLink: {} }
+  },
+
+  computed: {
+    ...mapGetters({
+      isUserAdmin: 'isUserAdmin'
+    })
   }
 }
 </script>

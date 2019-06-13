@@ -4,7 +4,7 @@
       <li class="pure-menu-item">
         <a href="/" class="pure-menu-heading pure-menu-link">App</a>
       </li>
-      <li class="pure-menu-item">
+      <li class="pure-menu-item" v-if="isUserModOrAdmin">
         <a href="/polls" class="pure-menu-link">Polls Management</a>
       </li>
       <li class="pure-menu-item">
@@ -12,13 +12,13 @@
       </li>
     </ul>
     <ul class="navbar-right pure-menu-list">
-      <li v-if="!username" class="pure-menu-item">
+      <li v-if="!user" class="pure-menu-item">
         <a href="http://localhost:8081/twitch/auth" class="pure-menu-link">Twitch Login</a>
       </li>
-      <li v-if="username" class="pure-menu-item">
-        <span class="pure-menu-link">Logged in as: {{ username }}</span>
+      <li v-if="user" class="pure-menu-item">
+        <span class="pure-menu-link">Logged in as: {{ user.username }}</span>
       </li>
-      <li v-if="username" class="pure-menu-item">
+      <li v-if="user" class="pure-menu-item">
         <a @click="logout" href="#" class="pure-menu-link">Logout</a>
       </li>
     </ul>
@@ -26,36 +26,20 @@
 </template>
 
 <script>
-import { fetchJSON } from '@/lib'
-import { serverAddress } from '@/consts'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'navbar',
 
-  data () {
-    return {
-      username: null
-    }
-  },
-
-  created () {
-    fetchJSON(`${serverAddress}/twitch/user`)
-      .then(response => {
-        if (response.success) {
-          this.username = response.data.username
-        }
-      })
+  computed: {
+    ...mapGetters({
+      user: 'getUser',
+      isUserModOrAdmin: 'isUserModOrAdmin'
+    })
   },
 
   methods: {
-    logout () {
-      fetchJSON(`${serverAddress}/twitch/logout`)
-        .then(response => {
-          if (response.success) {
-            this.username = null
-          }
-        })
-    }
+    ...mapActions(['logout'])
   }
 }
 </script>

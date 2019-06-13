@@ -1,6 +1,6 @@
 <template>
   <div>
-    <componentGameSearch :ban="ban" :createAlias="createAlias"></componentGameSearch>
+    <componentGameSearch v-if="user && user.role !== 'USER'" :ban="ban" :createAlias="createAlias"></componentGameSearch>
 
     <div class="table-wrapper">
       <div class="table-header-wrapper">
@@ -19,7 +19,7 @@
             <td>
               <ul class="table-list">
                 <li v-for="(alias, j) in game.aliases" :key="'game-alias-' + alias.name">
-                  <button class="pure-button pure-button-error" @click="deleteAlias(alias.name, i, j)">Delete</button>
+                  <button v-if="isUserModOrAdmin" class="pure-button pure-button-error" @click="deleteAlias(alias.name, i, j)">Delete</button>
                   <span>{{ alias.name }}</span>
                 </li>
               </ul>
@@ -42,7 +42,7 @@
         </thead>
         <tbody>
           <tr v-for="(game, i) in banned" :key="'game-' + game.id">
-            <td><button class="pure-button pure-button-success" @click="unban(game.id, i)">Unban</button> {{ game.name }}</td>
+            <td><button v-if="isUserModOrAdmin" class="pure-button pure-button-success" @click="unban(game.id, i)">Unban</button> {{ game.name }}</td>
             <td>{{ game.guid }}</td>
           </tr>
         </tbody>
@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { fetchJSON, encodeForURI } from '@/lib'
 import { serverAddress } from '@/consts'
 import { GameSearch } from '@/components'
@@ -67,6 +68,13 @@ export default {
       aliases: [],
       banned: []
     }
+  },
+
+  computed: {
+    ...mapGetters({
+      user: 'getUser',
+      isUserModOrAdmin: 'isUserModOrAdmin'
+    })
   },
 
   beforeRouteEnter (to, from, next) {

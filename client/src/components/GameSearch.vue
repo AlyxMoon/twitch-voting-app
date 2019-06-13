@@ -23,6 +23,7 @@
 </template>
 
 <script>
+
 import { fetchJSON } from '@/lib'
 import { serverAddress } from '@/consts'
 

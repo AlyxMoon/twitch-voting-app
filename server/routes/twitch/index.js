@@ -4,6 +4,8 @@ const fetch = require('isomorphic-unfetch')
 const passport = require(path.join(__dirname, '..', '..', 'auth'))
 const config = require(path.join(__dirname, '..', '..', 'config', 'auth'))
 const bot = require(path.join(__dirname, '..', '..', 'chatbot'))
+
+const { getRoleOfUser } = require(path.join(__dirname, '../../lib'))
 const { adminAccessOnly } = require(path.join(__dirname, '../../middleware'))
 
 const routes = require('express').Router()
@@ -13,8 +15,14 @@ routes.get('/user', (req, res) => {
   res.setHeader('Access-Control-Allow-Credentials', true)
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080')
 
-  let success = !!req.user
-  res.json({ success, data: req.user })
+  if (req.user) {
+    getRoleOfUser(req.user).then(role => {
+      req.user.role = role
+      res.json({ success: true, data: req.user })
+    })
+  } else {
+    res.json({ success: true, data: req.user })
+  }
 })
 
 routes.get('/auth', passport.authenticate('twitch', { forceVerify: true }))
