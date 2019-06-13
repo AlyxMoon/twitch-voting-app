@@ -5,6 +5,8 @@ const routesGames = require('./games')
 module.exports = app => {
   app.use((req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
+    res.setHeader('Access-Control-Allow-Credentials', true)
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080')
     next()
   })
 

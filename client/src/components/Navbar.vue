@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import fetch from 'isomorphic-unfetch'
+import { fetchJSON } from '@/lib'
 import { serverAddress } from '@/consts'
 
 export default {
@@ -39,10 +39,7 @@ export default {
   },
 
   created () {
-    fetch(`${serverAddress}/twitch/user`, {
-      credentials: 'include'
-    })
-      .then(response => response.json())
+    fetchJSON(`${serverAddress}/twitch/user`)
       .then(response => {
         if (response.success) {
           this.username = response.data.username
@@ -52,10 +49,7 @@ export default {
 
   methods: {
     logout () {
-      fetch(`${serverAddress}/twitch/logout`, {
-        credentials: 'include'
-      })
-        .then(response => response.json())
+      fetchJSON(`${serverAddress}/twitch/logout`)
         .then(response => {
           if (response.success) {
             this.username = null

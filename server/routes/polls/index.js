@@ -2,7 +2,8 @@ const path = require('path')
 
 const routes = require('express').Router()
 const routesVotes = require('./votes')
-const db = require(path.join(__dirname, '..', '..', 'db'))
+const db = require(path.join(__dirname, '../../db'))
+const { adminAccessOnly, modAccessOnly } = require(path.join(__dirname, '../../middleware'))
 
 const model = { model: 'Poll' }
 
@@ -42,7 +43,7 @@ routes.use('/:id/votes', (req, res, next) => {
 }, routesVotes)
 
 // CREATE
-routes.post('/', (req, res) => {
+routes.post('/', modAccessOnly, (req, res) => {
   res.setHeader('Content-Type', 'application/json')
   let { data } = req.body
   if (!data) {
@@ -61,7 +62,7 @@ routes.post('/', (req, res) => {
 })
 
 // UPDATE
-routes.post('/:id', (req, res) => {
+routes.post('/:id', modAccessOnly, (req, res) => {
   res.setHeader('Content-Type', 'application/json')
   let id = req.params.id
   let { data } = req.body
@@ -81,7 +82,7 @@ routes.post('/:id', (req, res) => {
 })
 
 // Set a poll to active, which will set all others to inactive
-routes.get('/:id/active', (req, res) => {
+routes.get('/:id/active', modAccessOnly, (req, res) => {
   res.setHeader('Content-Type', 'application/json')
   let id = req.params.id
   let newPolls = []
@@ -102,7 +103,7 @@ routes.get('/:id/active', (req, res) => {
 })
 
 // DELETE
-routes.delete('/:id', (req, res) => {
+routes.delete('/:id', modAccessOnly, (req, res) => {
   res.setHeader('Content-Type', 'application/json')
   let id = req.params.id
 

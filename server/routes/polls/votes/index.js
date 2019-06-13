@@ -2,6 +2,7 @@ const path = require('path')
 
 const routes = require('express').Router()
 const db = require(path.join(__dirname, '..', '..', '..', 'db'))
+const { adminAccessOnly } = require(path.join(__dirname, '../../../middleware'))
 
 const model = { model: 'Vote' }
 
@@ -21,7 +22,7 @@ routes.get('/', (req, res) => {
 })
 
 // Place a vote
-routes.get('/add/:gameId', (req, res) => {
+routes.get('/add/:gameId', adminAccessOnly, (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
   let { displayname, username, twitchId } = req.query
@@ -97,7 +98,7 @@ routes.get('/add/:gameId', (req, res) => {
 })
 
 // Set a reaction on a vote
-routes.post('/:id/reaction', (req, res) => {
+routes.post('/:id/reaction', adminAccessOnly, (req, res) => {
   res.setHeader('Content-Type', 'application/json')
   let { emoteLink } = req.body
   let id = req.params.id
@@ -116,7 +117,7 @@ routes.post('/:id/reaction', (req, res) => {
 })
 
 // Remove a vote
-routes.get('/remove', (req, res) => {
+routes.get('/remove', adminAccessOnly, (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
   let { displayname, username, twitchId } = req.query

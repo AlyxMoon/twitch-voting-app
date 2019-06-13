@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import fetch from 'isomorphic-unfetch'
+import { fetchJSON } from '@/lib'
 import { serverAddress } from '@/consts'
 
 import { PollListMinimalist, PollView } from '@/components'
@@ -54,22 +54,19 @@ export default {
   beforeRouteEnter (to, from, next) {
     let data = {}
 
-    fetch(`${serverAddress}/api/polls`)
-      .then(res => res.json())
-      .then(result => {
-        if (!result.success) throw result.error
-        data.polls = result.data
+    Promise.all([
+      fetchJSON(`${serverAddress}/api/polls`),
+      fetchJSON(`${serverAddress}/twitch/emotes`)
+    ]).then(([polls, emotes]) => {
+      if (!polls.success) throw polls.error
+      data.polls = polls.data
 
-        return fetch(`${serverAddress}/twitch/emotes`)
-      })
-      .then(res => res.json())
-      .then(result => {
-        if (!result.success) throw result.error
-        data.emotes = result.data
+      if (emotes.success) {
+        data.emotes = emotes.data
+      }
 
-        return next(vm => vm.setData(data))
-      })
-      .catch(error => next(vm => vm.setData({ error: error })))
+      return next(vm => vm.setData(data))
+    }).catch(error => next(vm => vm.setData({ error: error })))
   },
 
   methods: {
@@ -85,12 +82,11 @@ export default {
 
     createPoll () {
       if (this.newPoll && this.newPoll.name !== '') {
-        fetch(`${serverAddress}/api/polls`, {
+        fetchJSON(`${serverAddress}/api/polls`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json; charset=utf-8' },
           body: JSON.stringify({ data: this.newPoll })
         })
-          .then(res => res.json())
           .then(res => {
             if (!res.success) {
               this.error = res.error
@@ -98,15 +94,17 @@ export default {
             }
             this.polls.push(res.data)
           })
+          .catch(err => {
+            console.error(err)
+          })
       }
     },
 
     deletePoll (index) {
       if (!isNaN(index) && this.polls[index]) {
-        fetch(`${serverAddress}/api/polls/${this.polls[index].id}`, {
+        fetchJSON(`${serverAddress}/api/polls/${this.polls[index].id}`, {
           method: 'DELETE'
         })
-          .then(res => res.json())
           .then(res => {
             if (!res.success) {
               this.error = res.error
@@ -129,8 +127,7 @@ export default {
 
     setActive (index) {
       if (!isNaN(index) && this.polls[index]) {
-        fetch(`${serverAddress}/api/polls/${this.polls[index].id}/active`)
-          .then(res => res.json())
+        fetchJSON(`${serverAddress}/api/polls/${this.polls[index].id}/active`)
           .then(res => {
             if (!res.success) {
               this.error = res.error
@@ -143,12 +140,11 @@ export default {
 
     setReaction (pollId, voteId, emoteLink) {
       if (pollId && emoteLink) {
-        fetch(`${serverAddress}/api/polls/${pollId}/votes/${voteId}/reaction`, {
+        fetchJSON(`${serverAddress}/api/polls/${pollId}/votes/${voteId}/reaction`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json; charset=utf-8' },
           body: JSON.stringify({ emoteLink })
         })
-          .then(res => res.json())
           .then(res => {
             if (!res.success) {
               this.error = res.error
@@ -163,12 +159,11 @@ export default {
 
     setAllowVoteChange (pollId, allow) {
       if (pollId && allow !== undefined) {
-        fetch(`${serverAddress}/api/polls/${pollId}`, {
+        fetchJSON(`${serverAddress}/api/polls/${pollId}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json; charset=utf-8' },
           body: JSON.stringify({ data: { allowVoteChange: allow } })
         })
-          .then(res => res.json())
           .then(res => {
             if (!res.success) {
               this.error = res.error

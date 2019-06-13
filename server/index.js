@@ -21,7 +21,7 @@ bot.init()
 const app = express()
 app.use('/static', express.static(path.join(__dirname, 'dist', 'static')))
 
-app.use(cors())
+app.use(cors({ credentials: true, origin: 'http://localhost:8080' }))
 app.use(cookieParser())
 app.use(bodyParser())
 app.use(session({

@@ -4,6 +4,7 @@ const fetch = require('isomorphic-unfetch')
 const passport = require(path.join(__dirname, '..', '..', 'auth'))
 const config = require(path.join(__dirname, '..', '..', 'config', 'auth'))
 const bot = require(path.join(__dirname, '..', '..', 'chatbot'))
+const { adminAccessOnly } = require(path.join(__dirname, '../../middleware'))
 
 const routes = require('express').Router()
 
@@ -21,6 +22,7 @@ routes.get('/auth', passport.authenticate('twitch', { forceVerify: true }))
 routes.get('/auth/callback',
   passport.authenticate('twitch', { failureRedirect: '/' }),
   (req, res) => {
+    req.session.user = req.user
     req.login(req.user, error => {
       if (error) console.error(error)
       return res.redirect('http://localhost:8080')
@@ -49,7 +51,7 @@ routes.get('/mods', (req, res) => {
     })
 })
 
-routes.get('/emotes', (req, res) => {
+routes.get('/emotes', adminAccessOnly, (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
   // Secret API Endpoint! I have no emoticons to test, so leaving pokket in statically to test features

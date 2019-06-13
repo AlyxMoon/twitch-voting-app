@@ -6,6 +6,7 @@ const routes = require('express').Router()
 const db = require(path.join(__dirname, '..', '..', 'db'))
 const config = require(path.join(__dirname, '..', '..', 'config', 'games'))
 const { buildQueryParamsString } = require(path.join(__dirname, '..', '..', 'util'))
+const { adminAccessOnly, modAccessOnly } = require(path.join(__dirname, '../../middleware'))
 
 routes.get('/', (req, res) => {
   let filters = req.query.filters ? JSON.parse(decodeURI(req.query.filters)) : {}
@@ -18,7 +19,7 @@ routes.get('/', (req, res) => {
     })
 })
 
-routes.post('/', (req, res) => {
+routes.post('/', adminAccessOnly, (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
   let { data } = req.body
@@ -47,7 +48,7 @@ routes.get('/:id', (req, res) => {
     })
 })
 
-routes.get('/searchByID/:id', (req, res) => {
+routes.get('/searchByID/:id', modAccessOnly, (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
   let search = req.params.id
@@ -92,7 +93,7 @@ routes.get('/searchByID/:id', (req, res) => {
     .catch(error => res.json({ success: false, error: error.message }))
 })
 
-routes.get('/searchByName/:search', (req, res) => {
+routes.get('/searchByName/:search', modAccessOnly, (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
   let search = (req.params.search || '').toLocaleLowerCase()
@@ -142,7 +143,7 @@ routes.get('/searchByName/:search', (req, res) => {
     .catch(error => res.json({ success: false, error: error.message }))
 })
 
-routes.get('/ban/:id', (req, res) => {
+routes.get('/ban/:id', modAccessOnly, (req, res) => {
   let { id } = req.params
 
   // TODO look if game has been voted on for active poll and remove any existing votes
@@ -154,7 +155,7 @@ routes.get('/ban/:id', (req, res) => {
     })
 })
 
-routes.get('/unban/:id', (req, res) => {
+routes.get('/unban/:id', modAccessOnly, (req, res) => {
   let { id } = req.params
 
   db.update({ model: 'Game', id, data: { banned: false } })
@@ -165,7 +166,7 @@ routes.get('/unban/:id', (req, res) => {
     })
 })
 
-routes.post('/alias/create', (req, res) => {
+routes.post('/alias/create', modAccessOnly, (req, res) => {
   const { gameId, name } = req.body.data
   if (!gameId || !name) {
     res.json({ success: false, error: 'a required field was not included' })
@@ -181,7 +182,7 @@ routes.post('/alias/create', (req, res) => {
     })
 })
 
-routes.get('/alias/remove/:aliasName', (req, res) => {
+routes.get('/alias/remove/:aliasName', modAccessOnly, (req, res) => {
   const aliasName = decodeURIComponent(req.params.aliasName || '')
 
   db.delete({ model: 'GameAlias', id: aliasName })

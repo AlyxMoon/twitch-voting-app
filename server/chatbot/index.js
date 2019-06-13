@@ -38,5 +38,9 @@ module.exports = {
     })
     bot.connect()
     bot.on('message', messageCallback)
+  },
+
+  mods: (channelName) => {
+    return bot.mods(channelName)
   }
 }
